@@ -1,3 +1,5 @@
+import 'package:bofa_client/data/dto/product_list_dto.dart';
+
 import '../dto/product_dto.dart';
 import '../repository/product_repository.dart';
 
@@ -6,7 +8,7 @@ class ProductService {
 
   ProductService(this._repository);
 
-  Future<List<ProductDTO>> getProducts() {
+  Future<ProductListDto> getProducts() {
     return _repository.getProducts();
   }
 

@@ -24,7 +24,7 @@ mixin _$ProductDTO {
   int? get productId => throw _privateConstructorUsedError;
   String get name => throw _privateConstructorUsedError;
   String get email => throw _privateConstructorUsedError;
-  int get units => throw _privateConstructorUsedError;
+  String get units => throw _privateConstructorUsedError;
   @JsonKey(name: 'mn_step')
   int get mnStep => throw _privateConstructorUsedError;
   double get cost => throw _privateConstructorUsedError;
@@ -49,7 +49,7 @@ abstract class $ProductDTOCopyWith<$Res> {
       {@JsonKey(name: 'product_id') int? productId,
       String name,
       String email,
-      int units,
+      String units,
       @JsonKey(name: 'mn_step') int mnStep,
       double cost,
       @JsonKey(name: 'user_id') int userId,
@@ -94,7 +94,7 @@ class _$ProductDTOCopyWithImpl<$Res, $Val extends ProductDTO>
       units: null == units
           ? _value.units
           : units // ignore: cast_nullable_to_non_nullable
-              as int,
+              as String,
       mnStep: null == mnStep
           ? _value.mnStep
           : mnStep // ignore: cast_nullable_to_non_nullable
@@ -127,7 +127,7 @@ abstract class _$$ProductDTOImplCopyWith<$Res>
       {@JsonKey(name: 'product_id') int? productId,
       String name,
       String email,
-      int units,
+      String units,
       @JsonKey(name: 'mn_step') int mnStep,
       double cost,
       @JsonKey(name: 'user_id') int userId,
@@ -170,7 +170,7 @@ class __$$ProductDTOImplCopyWithImpl<$Res>
       units: null == units
           ? _value.units
           : units // ignore: cast_nullable_to_non_nullable
-              as int,
+              as String,
       mnStep: null == mnStep
           ? _value.mnStep
           : mnStep // ignore: cast_nullable_to_non_nullable
@@ -215,7 +215,7 @@ class _$ProductDTOImpl implements _ProductDTO {
   @override
   final String email;
   @override
-  final int units;
+  final String units;
   @override
   @JsonKey(name: 'mn_step')
   final int mnStep;
@@ -274,7 +274,7 @@ abstract class _ProductDTO implements ProductDTO {
       {@JsonKey(name: 'product_id') final int? productId,
       required final String name,
       required final String email,
-      required final int units,
+      required final String units,
       @JsonKey(name: 'mn_step') required final int mnStep,
       required final double cost,
       @JsonKey(name: 'user_id') required final int userId,
@@ -291,7 +291,7 @@ abstract class _ProductDTO implements ProductDTO {
   @override
   String get email;
   @override
-  int get units;
+  String get units;
   @override
   @JsonKey(name: 'mn_step')
   int get mnStep;

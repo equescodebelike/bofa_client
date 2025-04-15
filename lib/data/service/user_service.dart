@@ -1,3 +1,5 @@
+import 'package:bofa_client/data/dto/user_list_dto.dart';
+
 import '../dto/user_dto.dart';
 import '../repository/user_repository.dart';
 
@@ -6,7 +8,7 @@ class UserService {
 
   UserService(this._repository);
 
-  Future<List<UserDTO>> getUsers() {
+  Future<UserListDto> getUsers() {
     return _repository.getUsers();
   }
 

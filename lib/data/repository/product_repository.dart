@@ -1,8 +1,10 @@
+import 'package:bofa_client/data/dto/product_list_dto.dart';
+
 import '../dto/product_dto.dart';
 import '../service/api_client.dart';
 
 abstract class ProductRepository {
-  Future<List<ProductDTO>> getProducts();
+  Future<ProductListDto> getProducts();
   Future<ProductDTO> getProduct(int productId);
   Future<void> createProduct(ProductDTO product);
   Future<void> updateProduct(int productId, ProductDTO product);
@@ -15,7 +17,7 @@ class ProductRepositoryImpl implements ProductRepository {
   ProductRepositoryImpl(this._apiClient);
 
   @override
-  Future<List<ProductDTO>> getProducts() {
+  Future<ProductListDto> getProducts() {
     return _apiClient.getProducts();
   }
 

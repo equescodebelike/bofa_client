@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../bloc/product/product_barrel.dart';
+import '../bloc/product_detail/product_detail_barrel.dart';
 import '../data/dto/product_dto.dart';
 import 'product_form_screen.dart';
 
@@ -15,21 +15,21 @@ class ProductDetailScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Fetch the product details when the screen is built
-    context.read<ProductBloc>().add(FetchProduct(productId));
+    context.read<ProductDetailBloc>().add(FetchProductDetail(productId));
 
     return Scaffold(
       appBar: AppBar(
         title: const Text('Product Details'),
       ),
-      body: BlocBuilder<ProductBloc, ProductState>(
+      body: BlocBuilder<ProductDetailBloc, ProductDetailState>(
         builder: (context, state) {
-          if (state is ProductLoading) {
+          if (state is ProductDetailLoading) {
             return const Center(
               child: CircularProgressIndicator(),
             );
-          } else if (state is ProductLoaded) {
+          } else if (state is ProductDetailLoaded) {
             return _buildProductDetails(context, state.product);
-          } else if (state is ProductError) {
+          } else if (state is ProductDetailError) {
             return Center(
               child: Text(
                 'Error: ${state.message}',
@@ -169,7 +169,7 @@ class ProductDetailScreen extends StatelessWidget {
                     ),
                   ).then((_) {
                     // Refresh product details when returning from form
-                    context.read<ProductBloc>().add(FetchProduct(product.productId!));
+                    context.read<ProductDetailBloc>().add(FetchProductDetail(product.productId!));
                   });
                 },
                 icon: const Icon(Icons.edit),
@@ -209,7 +209,10 @@ class ProductDetailScreen extends StatelessWidget {
           TextButton(
             onPressed: () {
               Navigator.of(context).pop();
-              context.read<ProductBloc>().add(DeleteProduct(product.productId!));
+              context.read<ProductDetailBloc>().add(UpdateProductDetail(
+                    product.productId!,
+                    product.copyWith(name: product.name + " (deleted)"),
+                  ));
               // Navigate back to the product list screen
               Navigator.of(context).pop();
             },

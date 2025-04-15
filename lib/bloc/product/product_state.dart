@@ -1,3 +1,4 @@
+import 'package:bofa_client/data/dto/product_list_dto.dart';
 import 'package:equatable/equatable.dart';
 import '../../data/dto/product_dto.dart';
 
@@ -17,7 +18,7 @@ class ProductLoading extends ProductState {
 }
 
 class ProductsLoaded extends ProductState {
-  final List<ProductDTO> products;
+  final ProductListDto products;
 
   const ProductsLoaded(this.products);
 

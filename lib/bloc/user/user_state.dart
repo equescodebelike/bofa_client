@@ -1,3 +1,4 @@
+import 'package:bofa_client/data/dto/user_list_dto.dart';
 import 'package:equatable/equatable.dart';
 import '../../data/dto/user_dto.dart';
 
@@ -17,7 +18,7 @@ class UserLoading extends UserState {
 }
 
 class UsersLoaded extends UserState {
-  final List<UserDTO> users;
+  final UserListDto users;
 
   const UsersLoaded(this.users);
 
