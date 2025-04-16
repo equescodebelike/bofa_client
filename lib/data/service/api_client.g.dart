@@ -13,9 +13,7 @@ class _ApiClient implements ApiClient {
     this._dio, {
     this.baseUrl,
     this.errorLogger,
-  }) {
-    baseUrl ??= 'http://localhost:8080';
-  }
+  });
 
   final Dio _dio;
 
@@ -24,12 +22,12 @@ class _ApiClient implements ApiClient {
   final ParseErrorLogger? errorLogger;
 
   @override
-  Future<List<ProductDTO>> getProducts() async {
+  Future<ProductListDto> getProducts() async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
-    final _options = _setStreamType<List<ProductDTO>>(Options(
+    final _options = _setStreamType<ProductListDto>(Options(
       method: 'GET',
       headers: _headers,
       extra: _extra,
@@ -45,12 +43,10 @@ class _ApiClient implements ApiClient {
           _dio.options.baseUrl,
           baseUrl,
         )));
-    final _result = await _dio.fetch<List<dynamic>>(_options);
-    late List<ProductDTO> _value;
+    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
+    late ProductListDto _value;
     try {
-      _value = _result.data!
-          .map((dynamic i) => ProductDTO.fromJson(i as Map<String, dynamic>))
-          .toList();
+      _value = ProductListDto.fromJson(_result.data!);
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options);
       rethrow;
@@ -170,12 +166,12 @@ class _ApiClient implements ApiClient {
   }
 
   @override
-  Future<List<UserDTO>> getUsers() async {
+  Future<UserListDto> getUsers() async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
-    final _options = _setStreamType<List<UserDTO>>(Options(
+    final _options = _setStreamType<UserListDto>(Options(
       method: 'GET',
       headers: _headers,
       extra: _extra,
@@ -191,12 +187,10 @@ class _ApiClient implements ApiClient {
           _dio.options.baseUrl,
           baseUrl,
         )));
-    final _result = await _dio.fetch<List<dynamic>>(_options);
-    late List<UserDTO> _value;
+    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
+    late UserListDto _value;
     try {
-      _value = _result.data!
-          .map((dynamic i) => UserDTO.fromJson(i as Map<String, dynamic>))
-          .toList();
+      _value = UserListDto.fromJson(_result.data!);
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options);
       rethrow;

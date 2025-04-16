@@ -10,7 +10,7 @@ class ProductDTO with _$ProductDTO {
     @JsonKey(name: 'product_id') int? productId,
     required String name,
     required String email,
-    required int units,
+    required String units,
     @JsonKey(name: 'mn_step') required int mnStep,
     required double cost,
     @JsonKey(name: 'user_id') required int userId,

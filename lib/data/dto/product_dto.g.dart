@@ -11,7 +11,7 @@ _$ProductDTOImpl _$$ProductDTOImplFromJson(Map<String, dynamic> json) =>
       productId: (json['product_id'] as num?)?.toInt(),
       name: json['name'] as String,
       email: json['email'] as String,
-      units: (json['units'] as num).toInt(),
+      units: json['units'] as String,
       mnStep: (json['mn_step'] as num).toInt(),
       cost: (json['cost'] as num).toDouble(),
       userId: (json['user_id'] as num).toInt(),

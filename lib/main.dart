@@ -10,9 +10,15 @@ import 'data/service/product_service.dart';
 import 'data/service/user_service.dart';
 import 'data/service/order_service.dart';
 import 'data/service/order_part_service.dart';
-import 'bloc/bloc_barrel.dart';
+import 'bloc/user_list/user_list_barrel.dart';
+import 'bloc/user_detail/user_detail_barrel.dart';
+import 'bloc/order/order_barrel.dart';
+import 'bloc/order_part/order_part_barrel.dart';
+import 'bloc/product_list/product_list_barrel.dart';
+import 'bloc/product_detail/product_detail_barrel.dart';
 import 'bloc/app_bloc_observer.dart';
 import 'screens/product_list_screen.dart';
+import 'screens/user_list_screen.dart';
 
 void main() {
   // Set up BLoC observer for debugging
@@ -33,29 +39,37 @@ void main() {
   final orderPartService = OrderPartService(orderPartRepository);
   
   // Initialize BLoCs
-  final productBloc = ProductBloc(productService);
-  final userBloc = UserBloc(userService);
+  final productListBloc = ProductListBloc(productService);
+  final productDetailBloc = ProductDetailBloc(productService);
+  final userListBloc = UserListBloc(userService);
+  final userDetailBloc = UserDetailBloc(userService);
   final orderBloc = OrderBloc(orderService);
   final orderPartBloc = OrderPartBloc(orderPartService);
   
   runApp(MainApp(
-    productBloc: productBloc,
-    userBloc: userBloc,
+    productListBloc: productListBloc,
+    productDetailBloc: productDetailBloc,
+    userListBloc: userListBloc,
+    userDetailBloc: userDetailBloc,
     orderBloc: orderBloc,
     orderPartBloc: orderPartBloc,
   ));
 }
 
 class MainApp extends StatelessWidget {
-  final ProductBloc productBloc;
-  final UserBloc userBloc;
+  final ProductListBloc productListBloc;
+  final ProductDetailBloc productDetailBloc;
+  final UserListBloc userListBloc;
+  final UserDetailBloc userDetailBloc;
   final OrderBloc orderBloc;
   final OrderPartBloc orderPartBloc;
 
   const MainApp({
     super.key,
-    required this.productBloc,
-    required this.userBloc,
+    required this.productListBloc,
+    required this.productDetailBloc,
+    required this.userListBloc,
+    required this.userDetailBloc,
     required this.orderBloc,
     required this.orderPartBloc,
   });
@@ -64,11 +78,17 @@ class MainApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider<ProductBloc>(
-          create: (context) => productBloc,
+        BlocProvider<ProductListBloc>(
+          create: (context) => productListBloc,
         ),
-        BlocProvider<UserBloc>(
-          create: (context) => userBloc,
+        BlocProvider<ProductDetailBloc>(
+          create: (context) => productDetailBloc,
+        ),
+        BlocProvider<UserListBloc>(
+          create: (context) => userListBloc,
+        ),
+        BlocProvider<UserDetailBloc>(
+          create: (context) => userDetailBloc,
         ),
         BlocProvider<OrderBloc>(
           create: (context) => orderBloc,
@@ -120,16 +140,33 @@ class HomePage extends StatelessWidget {
             const Text('• Service Layer'),
             const Text('• BLoC Pattern'),
             const SizedBox(height: 32),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const ProductListScreen(),
-                  ),
-                );
-              },
-              child: const Text('View Products'),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const ProductListScreen(),
+                      ),
+                    );
+                  },
+                  child: const Text('View Products'),
+                ),
+                const SizedBox(width: 16),
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const UserListScreen(),
+                      ),
+                    );
+                  },
+                  child: const Text('View Users'),
+                ),
+              ],
             ),
           ],
         ),

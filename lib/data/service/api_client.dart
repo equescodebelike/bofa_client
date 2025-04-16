@@ -1,6 +1,8 @@
+import 'package:bofa_client/data/dto/product_list_dto.dart';
+import 'package:bofa_client/data/dto/user_list_dto.dart';
 import 'package:dio/dio.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
-import 'package:retrofit/retrofit.dart';
+import 'package:retrofit/retrofit.dart' hide Headers;
 import '../dto/product_dto.dart';
 import '../dto/user_dto.dart';
 import '../dto/order_dto.dart';
@@ -8,25 +10,34 @@ import '../dto/order_part_dto.dart';
 
 part 'api_client.g.dart';
 
-@RestApi(baseUrl: "http://localhost:8080")
+@RestApi()
 abstract class ApiClient {
   factory ApiClient(Dio dio, {String baseUrl}) = _ApiClient;
 
   static ApiClient create() {
+    const timeout = Duration(seconds: 30);
     final dio = Dio();
-    dio.interceptors.add(PrettyDioLogger(
-      requestHeader: true,
-      requestBody: true,
-      responseBody: true,
-      responseHeader: false,
-      compact: false,
-    ));
+    dio.options
+      ..baseUrl = 'http://localhost:8084'
+      ..contentType = Headers.jsonContentType
+      ..connectTimeout = timeout
+      ..receiveTimeout = timeout
+      ..sendTimeout = timeout;
+    dio.interceptors.add(
+      PrettyDioLogger(
+        requestHeader: true,
+        requestBody: true,
+        responseBody: true,
+        responseHeader: false,
+        compact: false,
+      ),
+    );
     return ApiClient(dio);
   }
 
   // Product endpoints
   @GET("/products/")
-  Future<List<ProductDTO>> getProducts();
+  Future<ProductListDto> getProducts();
 
   @GET("/products/{productId}")
   Future<ProductDTO> getProduct(@Path("productId") int productId);
@@ -35,15 +46,14 @@ abstract class ApiClient {
   Future<void> createProduct(@Body() ProductDTO product);
 
   @PUT("/products/{productId}")
-  Future<void> updateProduct(
-      @Path("productId") int productId, @Body() ProductDTO product);
+  Future<void> updateProduct(@Path("productId") int productId, @Body() ProductDTO product);
 
   @DELETE("/products/{productId}")
   Future<void> deleteProduct(@Path("productId") int productId);
 
   // User endpoints
   @GET("/users/")
-  Future<List<UserDTO>> getUsers();
+  Future<UserListDto> getUsers();
 
   @GET("/users/{userId}")
   Future<UserDTO> getUser(@Path("userId") int userId);
@@ -68,8 +78,7 @@ abstract class ApiClient {
   Future<void> createOrder(@Body() OrderDTO order);
 
   @PUT("/orders/{orderId}")
-  Future<void> updateOrder(
-      @Path("orderId") int orderId, @Body() OrderDTO order);
+  Future<void> updateOrder(@Path("orderId") int orderId, @Body() OrderDTO order);
 
   @DELETE("/orders/{orderId}")
   Future<void> deleteOrder(@Path("orderId") int orderId);
@@ -85,8 +94,7 @@ abstract class ApiClient {
   Future<void> createOrderPart(@Body() OrderPartDTO orderPart);
 
   @PUT("/orderparts/{orderPartId}")
-  Future<void> updateOrderPart(
-      @Path("orderPartId") int orderPartId, @Body() OrderPartDTO orderPart);
+  Future<void> updateOrderPart(@Path("orderPartId") int orderPartId, @Body() OrderPartDTO orderPart);
 
   @DELETE("/orderparts/{orderPartId}")
   Future<void> deleteOrderPart(@Path("orderPartId") int orderPartId);

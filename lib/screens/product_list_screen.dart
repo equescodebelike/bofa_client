@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../bloc/product/product_barrel.dart';
+import '../bloc/product_list/product_list_barrel.dart';
 import '../data/dto/product_dto.dart';
 import 'product_detail_screen.dart';
 import 'product_form_screen.dart';
@@ -17,7 +17,7 @@ class _ProductListScreenState extends State<ProductListScreen> {
   void initState() {
     super.initState();
     // Fetch products when the screen is initialized
-    context.read<ProductBloc>().add(const FetchProducts());
+    context.read<ProductListBloc>().add(const FetchProductList());
   }
 
   @override
@@ -26,15 +26,15 @@ class _ProductListScreenState extends State<ProductListScreen> {
       appBar: AppBar(
         title: const Text('Products'),
       ),
-      body: BlocBuilder<ProductBloc, ProductState>(
+      body: BlocBuilder<ProductListBloc, ProductListState>(
         builder: (context, state) {
-          if (state is ProductLoading) {
+          if (state is ProductListLoading) {
             return const Center(
               child: CircularProgressIndicator(),
             );
-          } else if (state is ProductsLoaded) {
-            return _buildProductList(state.products);
-          } else if (state is ProductError) {
+          } else if (state is ProductListLoaded) {
+            return _buildProductList(state.products.products);
+          } else if (state is ProductListError) {
             return Center(
               child: Text(
                 'Error: ${state.message}',
@@ -61,7 +61,7 @@ class _ProductListScreenState extends State<ProductListScreen> {
                 ),
               ).then((_) {
                 // Refresh products when returning from form
-                context.read<ProductBloc>().add(const FetchProducts());
+                context.read<ProductListBloc>().add(const FetchProductList());
               });
             },
             heroTag: 'createProduct',
@@ -71,7 +71,7 @@ class _ProductListScreenState extends State<ProductListScreen> {
           FloatingActionButton(
             onPressed: () {
               // Refresh products
-              context.read<ProductBloc>().add(const FetchProducts());
+              context.read<ProductListBloc>().add(const FetchProductList());
             },
             heroTag: 'refreshProducts',
             child: const Icon(Icons.refresh),
@@ -113,7 +113,7 @@ class _ProductListScreenState extends State<ProductListScreen> {
                       ),
                     ).then((_) {
                       // Refresh products when returning from form
-                      context.read<ProductBloc>().add(const FetchProducts());
+                      context.read<ProductListBloc>().add(const FetchProductList());
                     });
                   },
                 ),
@@ -159,7 +159,7 @@ class _ProductListScreenState extends State<ProductListScreen> {
           TextButton(
             onPressed: () {
               Navigator.of(context).pop();
-              context.read<ProductBloc>().add(DeleteProduct(product.productId!));
+              context.read<ProductListBloc>().add(DeleteProductFromList(product.productId!));
             },
             child: const Text('Delete'),
           ),
