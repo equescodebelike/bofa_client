@@ -33,7 +33,16 @@ class _ProductListScreenState extends State<ProductListScreen> {
               child: CircularProgressIndicator(),
             );
           } else if (state is ProductListLoaded) {
-            return _buildProductList(state.products.products);
+            // Extract all products from all categories and flatten into a single list
+            final allProducts = <ProductDTO>[];
+            if (state.products.products != null) {
+              state.products.products!.forEach((category, productsList) {
+                if (productsList != null) {
+                  allProducts.addAll(productsList);
+                }
+              });
+            }
+            return _buildProductList(allProducts);
           } else if (state is ProductListError) {
             return Center(
               child: Text(

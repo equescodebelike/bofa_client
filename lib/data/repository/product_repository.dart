@@ -9,6 +9,7 @@ abstract class ProductRepository {
   Future<void> createProduct(ProductDTO product);
   Future<void> updateProduct(int productId, ProductDTO product);
   Future<void> deleteProduct(int productId);
+  Future<ProductListDto> getProductByUserId(int userId);
 }
 
 class ProductRepositoryImpl implements ProductRepository {
@@ -39,5 +40,10 @@ class ProductRepositoryImpl implements ProductRepository {
   @override
   Future<void> deleteProduct(int productId) {
     return _apiClient.deleteProduct(productId);
+  }
+
+  @override
+  Future<ProductListDto> getProductByUserId(int userId) {
+    return _apiClient.getProductByUserId(userId);
   }
 }

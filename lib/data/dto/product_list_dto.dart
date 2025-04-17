@@ -5,9 +5,10 @@ part 'product_list_dto.freezed.dart';
 part 'product_list_dto.g.dart';
 
 @freezed
-abstract class ProductListDto with _$ProductListDto {
-   factory ProductListDto(
-    List<ProductDTO> products,
-   ) = _ProductListDto;
-   factory ProductListDto.fromJson(Map<String, dynamic> json) => _$ProductListDtoFromJson(json);
+class ProductListDto with _$ProductListDto {
+  const factory ProductListDto({
+    Map<String, List<ProductDTO>?>? products,
+  }) = _ProductListDto;
+
+  factory ProductListDto.fromJson(Map<String, dynamic> json) => _$ProductListDtoFromJson(json);
 }

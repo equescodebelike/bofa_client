@@ -51,6 +51,9 @@ abstract class ApiClient {
   @DELETE("/products/{productId}")
   Future<void> deleteProduct(@Path("productId") int productId);
 
+  @GET("/products/user/{userId}")
+  Future<ProductListDto> getProductByUserId(@Path('userId') int userId);
+
   // User endpoints
   @GET("/users/")
   Future<UserListDto> getUsers();

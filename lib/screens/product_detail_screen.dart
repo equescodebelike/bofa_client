@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:auto_route/auto_route.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../bloc/product_detail/product_detail_barrel.dart';
 import '../data/dto/product_dto.dart';
+import '../theme/app_typography.dart';
+import '../theme/color_const.dart';
+import '../screens/ui_kit/custom_filled_button.dart';
 import 'product_form_screen.dart';
 
 @RoutePage()
@@ -21,7 +27,20 @@ class ProductDetailScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Product Details'),
+        title: const Text(
+          'Product Details',
+          style: AppTypography.personalCardTitle,
+        ),
+        centerTitle: true,
+        leading: IconButton(
+          padding: EdgeInsets.zero,
+          visualDensity: VisualDensity.comfortable,
+          onPressed: () => Navigator.of(context).pop(),
+          icon: const Icon(
+            Icons.arrow_back_ios,
+            color: AppColor.black,
+          ),
+        ),
       ),
       body: BlocBuilder<ProductDetailBloc, ProductDetailState>(
         builder: (context, state) {
@@ -49,146 +68,141 @@ class ProductDetailScreen extends StatelessWidget {
   }
 
   Widget _buildProductDetails(BuildContext context, ProductDTO product) {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
+    return SafeArea(
+      minimum: const EdgeInsets.only(left: 24, right: 24),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Product image
-          if (product.imageUrl != null && product.imageUrl!.isNotEmpty)
-            Center(
-              child: Image.network(
-                product.imageUrl!,
-                height: 200,
-                width: double.infinity,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              CachedNetworkImage(
+                height: 273,
+                width: 273,
+                imageUrl: product.imageUrl ?? '',
                 fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) {
-                  return Container(
-                    height: 200,
-                    width: double.infinity,
-                    color: Colors.grey[300],
-                    child: const Icon(
-                      Icons.image_not_supported,
-                      size: 50,
-                      color: Colors.grey,
-                    ),
+                progressIndicatorBuilder: (_, __, ___) {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                },
+                errorWidget: (_, __, ___) {
+                  return Image.asset(
+                    'assets/image/empty_photo.png',
                   );
                 },
               ),
-            )
-          else
-            Container(
-              height: 200,
-              width: double.infinity,
-              color: Colors.grey[300],
-              child: const Icon(
-                Icons.image,
-                size: 50,
-                color: Colors.grey,
-              ),
-            ),
-          const SizedBox(height: 16),
-          
-          // Product name
-          Text(
-            product.name,
-            style: const TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const SizedBox(height: 8),
-          
-          // Product email
-          Row(
-            children: [
-              const Icon(Icons.email, color: Colors.grey),
-              const SizedBox(width: 8),
-              Text(
-                product.email,
-                style: const TextStyle(fontSize: 16),
-              ),
             ],
           ),
-          const SizedBox(height: 8),
           
-          // Product cost
-          Row(
-            children: [
-              const Icon(Icons.attach_money, color: Colors.grey),
-              const SizedBox(width: 8),
-              Text(
-                '\$${product.cost.toStringAsFixed(2)}',
-                style: const TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.green,
+          // Product name and cost
+          Padding(
+            padding: const EdgeInsets.only(top: 50),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  product.name,
+                  style: AppTypography.personalCardTitle,
                 ),
-              ),
-            ],
+                const Spacer(),
+                Text(
+                  '\$${product.cost.toStringAsFixed(2)} / ${product.units}',
+                  style: AppTypography.personalCardTitle,
+                ),
+              ],
+            ),
           ),
-          const SizedBox(height: 8),
           
-          // Product units
-          Row(
-            children: [
-              const Icon(Icons.inventory, color: Colors.grey),
-              const SizedBox(width: 8),
-              Text(
-                'Units: ${product.units}',
-                style: const TextStyle(fontSize: 16),
-              ),
-            ],
+          // Product description (using email field as description)
+          Padding(
+            padding: const EdgeInsets.only(left: 16, top: 24),
+            child: Text(product.email),
           ),
-          const SizedBox(height: 8),
           
-          // Product minimum step
-          Row(
-            children: [
-              const Icon(Icons.stairs, color: Colors.grey),
-              const SizedBox(width: 8),
-              Text(
-                'Minimum Step: ${product.mnStep}',
-                style: const TextStyle(fontSize: 16),
-              ),
-            ],
-          ),
-          const SizedBox(height: 24),
+          // Spacer to push buttons to bottom
+          const Spacer(),
           
           // Action buttons
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              ElevatedButton.icon(
-                onPressed: () {
-                  // Navigate to edit product screen
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => ProductFormScreen(
-                        product: product,
+          Padding(
+            padding: const EdgeInsets.only(bottom: 16),
+            child: Row(
+              children: [
+                // Favorite button (simplified implementation)
+                FutureBuilder<SharedPreferences>(
+                  future: SharedPreferences.getInstance(),
+                  builder: (context, snapshot) {
+                    bool isFavorite = false;
+                    if (snapshot.hasData) {
+                      final prefs = snapshot.data!;
+                      isFavorite = (prefs.getStringList('favorites') ?? [])
+                          .contains(product.productId.toString());
+                    }
+                    
+                    return GestureDetector(
+                      onTap: () async {
+                        if (snapshot.hasData) {
+                          final prefs = snapshot.data!;
+                          List<String> favorites = prefs.getStringList('favorites') ?? [];
+                          if (isFavorite) {
+                            favorites.remove(product.productId.toString());
+                          } else {
+                            favorites.add(product.productId.toString());
+                          }
+                          await prefs.setStringList('favorites', favorites);
+                          // Force rebuild to update UI
+                          context.read<ProductDetailBloc>().add(FetchProductDetail(productId));
+                        }
+                      },
+                      child: Icon(
+                        Icons.favorite,
+                        color: isFavorite ? Colors.red : Colors.grey,
+                        size: 24,
                       ),
-                    ),
-                  ).then((_) {
-                    // Refresh product details when returning from form
-                    context.read<ProductDetailBloc>().add(FetchProductDetail(product.productId!));
-                  });
-                },
-                icon: const Icon(Icons.edit),
-                label: const Text('Edit'),
-              ),
-              ElevatedButton.icon(
-                onPressed: () {
-                  // Show delete confirmation dialog
-                  _showDeleteConfirmationDialog(context, product);
-                },
-                icon: const Icon(Icons.delete),
-                label: const Text('Delete'),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.red,
+                    );
+                  },
                 ),
-              ),
-            ],
+                
+                const SizedBox(width: 20),
+                
+                // Edit button
+                SizedBox(
+                  width: 130,
+                  child: CustomFilledButton(
+                    text: 'Edit',
+                    onTap: () {
+                      // Navigate to edit product screen
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ProductFormScreen(
+                            product: product,
+                          ),
+                        ),
+                      ).then((_) {
+                        // Refresh product details when returning from form
+                        context.read<ProductDetailBloc>().add(FetchProductDetail(product.productId!));
+                      });
+                    },
+                  ),
+                ),
+                
+                const SizedBox(width: 10),
+                
+                // Delete button
+                SizedBox(
+                  width: 130,
+                  child: CustomFilledButton(
+                    text: 'Delete',
+                    fillColor: AppColor.red,
+                    onTap: () {
+                      // Show delete confirmation dialog
+                      _showDeleteConfirmationDialog(context, product);
+                    },
+                  ),
+                ),
+              ],
+            ),
           ),
         ],
       ),
