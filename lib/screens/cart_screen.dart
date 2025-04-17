@@ -1,22 +1,168 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../bloc/cart/cart_barrel.dart';
+import '../data/dto/cart_dto.dart';
+import '../data/dto/product_dto.dart';
+import '../data/repository/product_repository.dart';
+import '../theme/app_typography.dart';
+import '../theme/color_const.dart';
+import 'ui_kit/cart/basket_card.dart';
+import 'ui_kit/custom_filled_button.dart';
 
 @RoutePage()
-class CartScreen extends StatelessWidget {
+class CartScreen extends StatefulWidget {
   const CartScreen({super.key});
+
+  @override
+  State<CartScreen> createState() => _CartScreenState();
+}
+
+class _CartScreenState extends State<CartScreen> {
+  @override
+  void initState() {
+    super.initState();
+    // Fetch cart when the screen is initialized
+    context.read<CartBloc>().add(const FetchCart());
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Cart'),
-      ),
-      body: const Center(
-        child: Text(
-          'Cart Page - Empty for now',
-          style: TextStyle(fontSize: 18),
+        title: const Text(
+          'Cart',
+          style: AppTypography.personalCardTitle,
         ),
+        centerTitle: true,
       ),
+      body: BlocBuilder<CartBloc, CartState>(
+        builder: (context, state) {
+          if (state is CartLoading) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          } else if (state is CartLoaded) {
+            return _buildCartContent(context, state.cart);
+          } else if (state is CartError) {
+            return Center(
+              child: Text(
+                'Error: ${state.message}',
+                style: const TextStyle(color: Colors.red),
+              ),
+            );
+          } else {
+            return const Center(
+              child: Text('No cart data available'),
+            );
+          }
+        },
+      ),
+    );
+  }
+
+  Widget _buildCartContent(BuildContext context, CartDto cart) {
+    if (cart.items.isEmpty) {
+      return Center(
+        child: Text(
+          'Your cart is empty',
+          style: AppTypography.personalCardTitle,
+        ),
+      );
+    }
+
+    final productRepository = RepositoryProvider.of<ProductRepository>(context);
+
+    return Column(
+      children: [
+        Expanded(
+          child: ListView.builder(
+            itemCount: cart.items.length,
+            itemBuilder: (context, index) {
+              final cartItem = cart.items[index];
+              
+              return FutureBuilder<ProductDTO>(
+                future: productRepository.getProduct(cartItem.productId),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  } else if (snapshot.hasError) {
+                    return ListTile(
+                      title: Text('Error loading product: ${snapshot.error}'),
+                    );
+                  } else if (!snapshot.hasData) {
+                    return ListTile(
+                      title: Text('Product not found'),
+                    );
+                  }
+                  
+                  final product = snapshot.data!;
+                  
+                  return Dismissible(
+                    key: Key(cartItem.productId.toString()),
+                    direction: DismissDirection.endToStart,
+                    onDismissed: (direction) {
+                      context.read<CartBloc>().add(RemoveFromCart(cartItem.productId));
+                    },
+                    background: Container(
+                      color: Colors.red,
+                      alignment: Alignment.centerRight,
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: const Icon(
+                        Icons.delete,
+                        color: Colors.white,
+                      ),
+                    ),
+                    child: BasketCard(
+                      cartItem: cartItem,
+                      onTap: () {
+                        // Navigate to product details
+                        // You can implement this navigation later
+                      },
+                      product: product,
+                    ),
+                  );
+                },
+              );
+            },
+          ),
+        ),
+        if (cart.items.isNotEmpty)
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Card(
+                  margin: const EdgeInsets.symmetric(vertical: 10),
+                  child: Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text('Total'),
+                        Text('\$${cart.sum.toStringAsFixed(2)}'),
+                      ],
+                    ),
+                  ),
+                ),
+                CustomFilledButton(
+                  text: 'Proceed to Checkout',
+                  onTap: () {
+                    // Implement checkout functionality
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Checkout functionality coming soon!'),
+                      ),
+                    );
+                  },
+                ),
+              ],
+            ),
+          ),
+      ],
     );
   }
 }

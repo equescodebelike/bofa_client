@@ -7,16 +7,19 @@ import 'data/repository/product_repository.dart';
 import 'data/repository/user_repository.dart';
 import 'data/repository/order_repository.dart';
 import 'data/repository/order_part_repository.dart';
+import 'data/repository/cart_repository.dart';
 import 'data/service/product_service.dart';
 import 'data/service/user_service.dart';
 import 'data/service/order_service.dart';
 import 'data/service/order_part_service.dart';
+import 'data/service/cart_service.dart';
 import 'bloc/user_list/user_list_barrel.dart';
 import 'bloc/user_detail/user_detail_barrel.dart';
 import 'bloc/order/order_barrel.dart';
 import 'bloc/order_part/order_part_barrel.dart';
 import 'bloc/product_list/product_list_barrel.dart';
 import 'bloc/product_detail/product_detail_barrel.dart';
+import 'bloc/cart/cart_barrel.dart';
 import 'bloc/app_bloc_observer.dart';
 import 'screens/product_list_screen.dart';
 import 'screens/user_list_screen.dart';
@@ -32,12 +35,14 @@ void main() {
   final userRepository = UserRepositoryImpl(apiClient);
   final orderRepository = OrderRepositoryImpl(apiClient);
   final orderPartRepository = OrderPartRepositoryImpl(apiClient);
+  final cartRepository = CartRepository(apiClient);
   
   // Initialize services
   final productService = ProductService(productRepository);
   final userService = UserService(userRepository);
   final orderService = OrderService(orderRepository);
   final orderPartService = OrderPartService(orderPartRepository);
+  final cartService = CartService(cartRepository);
   
   // Initialize BLoCs
   final productListBloc = ProductListBloc(productService);
@@ -46,6 +51,7 @@ void main() {
   final userDetailBloc = UserDetailBloc(userService);
   final orderBloc = OrderBloc(orderService);
   final orderPartBloc = OrderPartBloc(orderPartService);
+  final cartBloc = CartBloc(cartService);
   
   runApp(MainApp(
     productListBloc: productListBloc,
@@ -54,6 +60,7 @@ void main() {
     userDetailBloc: userDetailBloc,
     orderBloc: orderBloc,
     orderPartBloc: orderPartBloc,
+    cartBloc: cartBloc,
   ));
 }
 
@@ -64,6 +71,7 @@ class MainApp extends StatelessWidget {
   final UserDetailBloc userDetailBloc;
   final OrderBloc orderBloc;
   final OrderPartBloc orderPartBloc;
+  final CartBloc cartBloc;
 
   MainApp({
     super.key,
@@ -73,6 +81,7 @@ class MainApp extends StatelessWidget {
     required this.userDetailBloc,
     required this.orderBloc,
     required this.orderPartBloc,
+    required this.cartBloc,
   });
 
   final AppRouter appRouter = AppRouter();
@@ -92,6 +101,9 @@ class MainApp extends StatelessWidget {
         ),
         RepositoryProvider<OrderPartRepository>(
           create: (context) => OrderPartRepositoryImpl(ApiClient.create()),
+        ),
+        RepositoryProvider<CartRepository>(
+          create: (context) => CartRepository(ApiClient.create()),
         ),
       ],
       child: MultiBlocProvider(
@@ -113,6 +125,9 @@ class MainApp extends StatelessWidget {
           ),
           BlocProvider<OrderPartBloc>(
             create: (context) => orderPartBloc,
+          ),
+          BlocProvider<CartBloc>(
+            create: (context) => cartBloc,
           ),
         ],
         child: MaterialApp.router(
