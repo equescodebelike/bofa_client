@@ -1,9 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:auto_route/auto_route.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import '../bloc/user_detail/user_detail_barrel.dart';
 import '../data/dto/user_dto.dart';
+import '../data/dto/product_dto.dart';
+import '../data/service/product_service.dart';
+import '../data/repository/product_repository.dart';
+import '../theme/app_typography.dart';
+import '../theme/color_const.dart';
+import '../screens/ui_kit/custom_filled_button.dart';
+import '../screens/ui_kit/product_card/categories_list.dart';
+import '../screens/ui_kit/product_card/product_grid_view.dart';
 import 'user_form_screen.dart';
 
+@RoutePage()
 class UserDetailScreen extends StatelessWidget {
   final int userId;
 
@@ -19,7 +31,20 @@ class UserDetailScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('User Details'),
+        title: const Text(
+          'User Details',
+          style: AppTypography.personalCardTitle,
+        ),
+        centerTitle: true,
+        leading: IconButton(
+          padding: EdgeInsets.zero,
+          visualDensity: VisualDensity.comfortable,
+          onPressed: () => Navigator.of(context).pop(),
+          icon: const Icon(
+            Icons.arrow_back_ios,
+            color: AppColor.black,
+          ),
+        ),
       ),
       body: BlocBuilder<UserDetailBloc, UserDetailState>(
         builder: (context, state) {
@@ -47,144 +72,284 @@ class UserDetailScreen extends StatelessWidget {
   }
 
   Widget _buildUserDetails(BuildContext context, UserDTO user) {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+    // Get product service
+    final productRepository = RepositoryProvider.of<ProductRepository>(context);
+    final productService = ProductService(productRepository);
+    return SafeArea(
+      child: ListView(
         children: [
-          // User image
-          Center(
-            child: CircleAvatar(
-              radius: 60,
-              backgroundImage: user.imageUrl != null && user.imageUrl!.isNotEmpty
-                  ? NetworkImage(user.imageUrl!)
-                  : null,
-              child: user.imageUrl == null || user.imageUrl!.isEmpty
-                  ? const Icon(Icons.person, size: 60)
-                  : null,
-            ),
-          ),
-          const SizedBox(height: 24),
-          
-          // User name
-          Text(
-            user.name,
-            style: const TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const SizedBox(height: 8),
-          
-          // User email
-          Row(
-            children: [
-              const Icon(Icons.email, color: Colors.grey),
-              const SizedBox(width: 8),
-              Text(
-                user.email,
-                style: const TextStyle(fontSize: 16),
-              ),
-            ],
-          ),
-          const SizedBox(height: 8),
-          
-          // User phone
-          Row(
-            children: [
-              const Icon(Icons.phone, color: Colors.grey),
-              const SizedBox(width: 8),
-              Text(
-                user.phoneNumber,
-                style: const TextStyle(fontSize: 16),
-              ),
-            ],
-          ),
-          const SizedBox(height: 8),
-          
-          // User status
-          Row(
-            children: [
-              const Icon(Icons.circle, color: Colors.grey),
-              const SizedBox(width: 8),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                decoration: BoxDecoration(
-                  color: user.isActive ? Colors.green : Colors.red,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Text(
-                  user.isActive ? 'Active' : 'Inactive',
-                  style: const TextStyle(color: Colors.white),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 16),
-          
-          // User categories
-          const Text(
-            'Categories:',
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const SizedBox(height: 8),
-          Wrap(
-            spacing: 8,
-            runSpacing: 8,
-            children: user.categories.map((category) {
-              return Chip(
-                label: Text(category),
-                backgroundColor: Colors.blue.shade100,
-              );
-            }).toList(),
-          ),
-          const SizedBox(height: 24),
-          
-          // Action buttons
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              ElevatedButton.icon(
-                onPressed: () {
-                  // Navigate to edit user screen
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => UserFormScreen(
-                        user: user,
+          Padding(
+            padding: const EdgeInsets.all(8),
+            child: Column(
+              children: [
+                // User image and description in a row
+                Row(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(12.0),
+                      child: Container(
+                        width: 128,
+                        height: 128,
+                        clipBehavior: Clip.hardEdge,
+                        decoration: BoxDecoration(
+                          boxShadow: [
+                            BoxShadow(
+                              color: AppColor.black.withOpacity(0.08),
+                              offset: const Offset(0, 4),
+                              blurRadius: 12,
+                              spreadRadius: 0,
+                            )
+                          ],
+                          borderRadius: BorderRadius.circular(15),
+                          color: Colors.white,
+                        ),
+                        child: Stack(
+                          children: [
+                            CachedNetworkImage(
+                              fit: BoxFit.cover,
+                              imageUrl: user.imageUrl ?? '',
+                              progressIndicatorBuilder: (_, __, ___) {
+                                return const Center(
+                                  child: CircularProgressIndicator(),
+                                );
+                              },
+                              errorWidget: (_, __, ___) {
+                                return Container(
+                                  color: Colors.grey[200],
+                                  child: const Icon(
+                                    Icons.person,
+                                    size: 50,
+                                    color: Colors.grey,
+                                  ),
+                                );
+                              },
+                            ),
+                            // Add a badge in the top right corner
+                            Positioned(
+                              right: 10,
+                              top: 8,
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(5),
+                                  color: AppColor.green,
+                                ),
+                                height: 24,
+                                width: 67,
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      user.categories.length.toString(),
+                                      style: const TextStyle(
+                                        fontSize: 16,
+                                        color: AppColor.white,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                    const SizedBox(width: 4),
+                                    SvgPicture.asset(
+                                      'assets/svg/info.svg',
+                                      height: 18,
+                                      width: 18,
+                                      color: AppColor.white,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            )
+                          ],
+                        ),
                       ),
                     ),
-                  ).then((_) {
-                    // Refresh user details when returning from form
-                    context.read<UserDetailBloc>().add(FetchUserDetail(user.userId!));
-                  });
-                },
-                icon: const Icon(Icons.edit),
-                label: const Text('Edit'),
-              ),
-              ElevatedButton.icon(
-                onPressed: () {
-                  // Toggle user active status
-                  final updatedUser = user.copyWith(
-                    isActive: !user.isActive,
-                  );
-                  context.read<UserDetailBloc>().add(
-                    UpdateUserDetail(user.userId!, updatedUser),
-                  );
-                },
-                icon: Icon(user.isActive ? Icons.block : Icons.check_circle),
-                label: Text(user.isActive ? 'Deactivate' : 'Activate'),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: user.isActive ? Colors.red : Colors.green,
+                    // User description
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              user.name,
+                              style: AppTypography.personalCardTitle,
+                            ),
+                            const SizedBox(height: 8),
+                            Row(
+                              children: [
+                                const Icon(Icons.email, color: Colors.grey, size: 16),
+                                const SizedBox(width: 4),
+                                Expanded(
+                                  child: Text(
+                                    user.email,
+                                    style: AppTypography.label,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 8),
+                            Row(
+                              children: [
+                                const Icon(Icons.phone, color: Colors.grey, size: 16),
+                                const SizedBox(width: 4),
+                                Text(
+                                  user.phoneNumber,
+                                  style: AppTypography.label,
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    )
+                  ],
                 ),
-              ),
-            ],
+                
+                // Rating and reviews
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                  child: Row(
+                    children: [
+                      _buildRatingStars(3.5), // Placeholder rating
+                      const SizedBox(width: 10),
+                      const Text('3.5'),
+                      const Spacer(),
+                      Text(
+                        '${user.categories.length} categories >',
+                        style: AppTypography.personalCardTitle,
+                      ),
+                    ],
+                  ),
+                ),
+                
+                // Categories
+                CategoriesList(list: user.categories),
+                
+                // User's Products
+                Padding(
+                  padding: const EdgeInsets.only(top: 24),
+                  child: FutureBuilder<Map<String, List<ProductDTO>>>(
+                    future: productService.getProductsByUserId(user.userId!),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      } else if (snapshot.hasError) {
+                        return Text('Error: ${snapshot.error}');
+                      } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                        return const Padding(
+                          padding: EdgeInsets.all(16.0),
+                          child: Text('No products found for this user'),
+                        );
+                      } else {
+                        // Display products grouped by category
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Padding(
+                              padding: EdgeInsets.all(16.0),
+                              child: Text(
+                                'User Products',
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 16),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: snapshot.data!.entries.map((entry) {
+                                  return ProductGridView(
+                                    products: entry.value,
+                                    category: entry.key,
+                                  );
+                                }).toList(),
+                              ),
+                            ),
+                          ],
+                        );
+                      }
+                    },
+                  ),
+                ),
+                
+                // Action button
+                Padding(
+                  padding: const EdgeInsets.only(top: 24, bottom: 16),
+                  child: CustomFilledButton(
+                    text: 'Edit User',
+                    onTap: () {
+                      // Navigate to edit user screen
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => UserFormScreen(
+                            user: user,
+                          ),
+                        ),
+                      ).then((_) {
+                        // Refresh user details when returning from form
+                        context.read<UserDetailBloc>().add(FetchUserDetail(user.userId!));
+                      });
+                    },
+                  ),
+                ),
+              ],
+            ),
           ),
         ],
       ),
     );
+  }
+  
+  Widget _buildRatingStars(double rating) {
+    final List<Widget> stars = [];
+    final int activeStarsCount = rating.floor();
+    final bool hasHalfStar = rating - activeStarsCount >= 0.5;
+
+    for (int i = 0; i < activeStarsCount; i++) {
+      stars.add(
+        Padding(
+          padding: const EdgeInsets.only(right: 2),
+          child: SvgPicture.asset(
+            'assets/svg/star.svg',
+            height: 16,
+            width: 16,
+          ),
+        ),
+      );
+    }
+
+    if (hasHalfStar) {
+      stars.add(
+        Padding(
+          padding: const EdgeInsets.only(right: 2),
+          child: SvgPicture.asset(
+            'assets/svg/star.svg',
+            height: 16,
+            width: 16,
+            color: Colors.amber,
+          ),
+        ),
+      );
+    }
+
+    for (int i = 0; i < 5 - activeStarsCount - (hasHalfStar ? 1 : 0); i++) {
+      stars.add(
+        Padding(
+          padding: const EdgeInsets.only(right: 2),
+          child: SvgPicture.asset(
+            'assets/svg/star.svg',
+            height: 16,
+            width: 16,
+            color: Colors.grey,
+          ),
+        ),
+      );
+    }
+
+    return Row(children: stars);
   }
 }

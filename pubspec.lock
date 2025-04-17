@@ -25,14 +25,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "5.13.0"
-  appmetrica_plugin:
-    dependency: "direct main"
-    description:
-      name: appmetrica_plugin
-      sha256: "0357330d701a7b61c7b0aabccbe9abe799539d927ad82ad4b6708beb27f7c500"
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.1.1"
   archive:
     dependency: transitive
     description:
