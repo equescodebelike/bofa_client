@@ -7,6 +7,7 @@ import '../dto/product_dto.dart';
 import '../dto/user_dto.dart';
 import '../dto/order_dto.dart';
 import '../dto/order_part_dto.dart';
+import '../dto/cart_dto.dart';
 
 part 'api_client.g.dart';
 
@@ -101,4 +102,20 @@ abstract class ApiClient {
 
   @DELETE("/orderparts/{orderPartId}")
   Future<void> deleteOrderPart(@Path("orderPartId") int orderPartId);
+  
+  // Cart endpoints
+  @GET("/cart/")
+  Future<CartDto> getCart();
+
+  @POST("/cart/")
+  Future<void> addToCart(@Body() Map<String, dynamic> data);
+
+  @DELETE("/cart/item/{productId}/")
+  Future<void> removeFromCart(@Path("productId") int productId);
+
+  @PUT("/cart/item/{productId}/{size}/")
+  Future<void> updateCartItemSize(
+      @Path("productId") int productId, 
+      @Path("size") int size
+  );
 }
