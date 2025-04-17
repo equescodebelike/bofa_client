@@ -20,7 +20,8 @@ ProductListDto _$ProductListDtoFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$ProductListDto {
-  List<ProductDTO> get products => throw _privateConstructorUsedError;
+  Map<String, List<ProductDTO>?>? get products =>
+      throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -34,7 +35,7 @@ abstract class $ProductListDtoCopyWith<$Res> {
           ProductListDto value, $Res Function(ProductListDto) then) =
       _$ProductListDtoCopyWithImpl<$Res, ProductListDto>;
   @useResult
-  $Res call({List<ProductDTO> products});
+  $Res call({Map<String, List<ProductDTO>?>? products});
 }
 
 /// @nodoc
@@ -50,13 +51,13 @@ class _$ProductListDtoCopyWithImpl<$Res, $Val extends ProductListDto>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? products = null,
+    Object? products = freezed,
   }) {
     return _then(_value.copyWith(
-      products: null == products
+      products: freezed == products
           ? _value.products
           : products // ignore: cast_nullable_to_non_nullable
-              as List<ProductDTO>,
+              as Map<String, List<ProductDTO>?>?,
     ) as $Val);
   }
 }
@@ -69,7 +70,7 @@ abstract class _$$ProductListDtoImplCopyWith<$Res>
       __$$ProductListDtoImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({List<ProductDTO> products});
+  $Res call({Map<String, List<ProductDTO>?>? products});
 }
 
 /// @nodoc
@@ -83,13 +84,13 @@ class __$$ProductListDtoImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? products = null,
+    Object? products = freezed,
   }) {
     return _then(_$ProductListDtoImpl(
-      null == products
+      products: freezed == products
           ? _value._products
           : products // ignore: cast_nullable_to_non_nullable
-              as List<ProductDTO>,
+              as Map<String, List<ProductDTO>?>?,
     ));
   }
 }
@@ -97,17 +98,20 @@ class __$$ProductListDtoImplCopyWithImpl<$Res>
 /// @nodoc
 @JsonSerializable()
 class _$ProductListDtoImpl implements _ProductListDto {
-  _$ProductListDtoImpl(final List<ProductDTO> products) : _products = products;
+  const _$ProductListDtoImpl({final Map<String, List<ProductDTO>?>? products})
+      : _products = products;
 
   factory _$ProductListDtoImpl.fromJson(Map<String, dynamic> json) =>
       _$$ProductListDtoImplFromJson(json);
 
-  final List<ProductDTO> _products;
+  final Map<String, List<ProductDTO>?>? _products;
   @override
-  List<ProductDTO> get products {
-    if (_products is EqualUnmodifiableListView) return _products;
+  Map<String, List<ProductDTO>?>? get products {
+    final value = _products;
+    if (value == null) return null;
+    if (_products is EqualUnmodifiableMapView) return _products;
     // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_products);
+    return EqualUnmodifiableMapView(value);
   }
 
   @override
@@ -144,14 +148,14 @@ class _$ProductListDtoImpl implements _ProductListDto {
 }
 
 abstract class _ProductListDto implements ProductListDto {
-  factory _ProductListDto(final List<ProductDTO> products) =
-      _$ProductListDtoImpl;
+  const factory _ProductListDto(
+      {final Map<String, List<ProductDTO>?>? products}) = _$ProductListDtoImpl;
 
   factory _ProductListDto.fromJson(Map<String, dynamic> json) =
       _$ProductListDtoImpl.fromJson;
 
   @override
-  List<ProductDTO> get products;
+  Map<String, List<ProductDTO>?>? get products;
   @override
   @JsonKey(ignore: true)
   _$$ProductListDtoImplCopyWith<_$ProductListDtoImpl> get copyWith =>

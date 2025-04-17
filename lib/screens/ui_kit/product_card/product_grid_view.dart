@@ -1,3 +1,5 @@
+import 'package:auto_route/auto_route.dart';
+import 'package:bofa_client/navigation/app_router.dart';
 import 'package:flutter/material.dart';
 import '../../../data/dto/product_dto.dart';
 import '../../../theme/app_typography.dart';
@@ -45,19 +47,7 @@ class ProductGridView extends StatelessWidget {
               product: product,
               onTap: () {
                 // Navigate to product detail screen
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => Scaffold(
-                      appBar: AppBar(
-                        title: Text(product.name),
-                      ),
-                      body: Center(
-                        child: Text('Product Detail: ${product.name}'),
-                      ),
-                    ),
-                  ),
-                );
+                context.router.push(ProductDetailRoute(productId: product.productId!));
               },
             );
           },

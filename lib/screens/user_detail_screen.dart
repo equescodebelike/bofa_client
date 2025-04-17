@@ -1,3 +1,4 @@
+import 'package:bofa_client/data/dto/product_list_dto.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:auto_route/auto_route.dart';
@@ -227,8 +228,8 @@ class UserDetailScreen extends StatelessWidget {
                 // User's Products
                 Padding(
                   padding: const EdgeInsets.only(top: 24),
-                  child: FutureBuilder<Map<String, List<ProductDTO>>>(
-                    future: productService.getProductsByUserId(user.userId!),
+                  child: FutureBuilder<ProductListDto>(
+                    future: productService.getProductByUserId(user.userId!),
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         return const Center(
@@ -236,12 +237,13 @@ class UserDetailScreen extends StatelessWidget {
                         );
                       } else if (snapshot.hasError) {
                         return Text('Error: ${snapshot.error}');
-                      } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                      } else if (!snapshot.hasData) {
                         return const Padding(
                           padding: EdgeInsets.all(16.0),
                           child: Text('No products found for this user'),
                         );
                       } else {
+                        
                         // Display products grouped by category
                         return Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -260,12 +262,21 @@ class UserDetailScreen extends StatelessWidget {
                               padding: const EdgeInsets.symmetric(horizontal: 16),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
-                                children: snapshot.data!.entries.map((entry) {
-                                  return ProductGridView(
-                                    products: entry.value,
-                                    category: entry.key,
-                                  );
-                                }).toList(),
+                                children: snapshot.data!.products != null 
+                                  ? snapshot.data!.products!.entries.map((entry) {
+                                      final category = entry.key;
+                                      final productsList = entry.value;
+                                      
+                                      if (productsList == null) {
+                                        return const SizedBox.shrink();
+                                      }
+                                      
+                                      return ProductGridView(
+                                        products: productsList,
+                                        category: category,
+                                      );
+                                    }).toList()
+                                  : [const Text('No products available')],
                               ),
                             ),
                           ],
