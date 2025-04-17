@@ -25,7 +25,7 @@ class _UserFormScreenState extends State<UserFormScreen> {
   late final TextEditingController _passwordController;
   late final TextEditingController _phoneNumberController;
   late final TextEditingController _imageUrlController;
-  late bool _isActive;
+  // Removed _isActive field but keeping it in the model
   final List<String> _selectedCategories = [];
   
   final List<String> _availableCategories = [
@@ -53,7 +53,7 @@ class _UserFormScreenState extends State<UserFormScreen> {
     _imageUrlController = TextEditingController(
       text: widget.isEditing ? widget.user!.imageUrl ?? '' : '',
     );
-    _isActive = widget.isEditing ? widget.user!.isActive : true;
+    // Removed _isActive initialization
     
     if (widget.isEditing) {
       _selectedCategories.addAll(widget.user!.categories);
@@ -207,15 +207,6 @@ class _UserFormScreenState extends State<UserFormScreen> {
               keyboardType: TextInputType.url,
             ),
             const SizedBox(height: 16),
-            SwitchListTile(
-              title: const Text('Active'),
-              value: _isActive,
-              onChanged: (value) {
-                setState(() {
-                  _isActive = value;
-                });
-              },
-            ),
             const SizedBox(height: 16),
             const Text(
               'Categories:',
@@ -270,7 +261,7 @@ class _UserFormScreenState extends State<UserFormScreen> {
         email: _emailController.text,
         password: _passwordController.text,
         phoneNumber: _phoneNumberController.text,
-        isActive: _isActive,
+        isActive: widget.isEditing ? widget.user!.isActive : true, // Default to true for new users
         imageUrl: _imageUrlController.text.isEmpty
             ? null
             : _imageUrlController.text,

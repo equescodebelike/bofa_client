@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:auto_route/auto_route.dart';
 import '../bloc/product_detail/product_detail_barrel.dart';
 import '../data/dto/product_dto.dart';
 import 'product_form_screen.dart';
 
+@RoutePage()
 class ProductDetailScreen extends StatelessWidget {
   final int productId;
 

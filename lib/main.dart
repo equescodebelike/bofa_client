@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:dio/dio.dart';
+import 'navigation/app_router.dart';
 import 'data/service/api_client.dart';
 import 'data/repository/product_repository.dart';
 import 'data/repository/user_repository.dart';
@@ -64,7 +65,7 @@ class MainApp extends StatelessWidget {
   final OrderBloc orderBloc;
   final OrderPartBloc orderPartBloc;
 
-  const MainApp({
+  MainApp({
     super.key,
     required this.productListBloc,
     required this.productDetailBloc,
@@ -74,101 +75,54 @@ class MainApp extends StatelessWidget {
     required this.orderPartBloc,
   });
 
+  final AppRouter appRouter = AppRouter();
+
   @override
   Widget build(BuildContext context) {
-    return MultiBlocProvider(
+    return MultiRepositoryProvider(
       providers: [
-        BlocProvider<ProductListBloc>(
-          create: (context) => productListBloc,
+        RepositoryProvider<ProductRepository>(
+          create: (context) => ProductRepositoryImpl(ApiClient.create()),
         ),
-        BlocProvider<ProductDetailBloc>(
-          create: (context) => productDetailBloc,
+        RepositoryProvider<UserRepository>(
+          create: (context) => UserRepositoryImpl(ApiClient.create()),
         ),
-        BlocProvider<UserListBloc>(
-          create: (context) => userListBloc,
+        RepositoryProvider<OrderRepository>(
+          create: (context) => OrderRepositoryImpl(ApiClient.create()),
         ),
-        BlocProvider<UserDetailBloc>(
-          create: (context) => userDetailBloc,
-        ),
-        BlocProvider<OrderBloc>(
-          create: (context) => orderBloc,
-        ),
-        BlocProvider<OrderPartBloc>(
-          create: (context) => orderPartBloc,
+        RepositoryProvider<OrderPartRepository>(
+          create: (context) => OrderPartRepositoryImpl(ApiClient.create()),
         ),
       ],
-      child: MaterialApp(
-        title: 'BofA Client',
-        theme: ThemeData(
-          primarySwatch: Colors.blue,
-          fontFamily: 'Montserrat',
-        ),
-        home: const HomePage(),
-      ),
-    );
-  }
-}
-
-class HomePage extends StatelessWidget {
-  const HomePage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('BofA Client'),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Text(
-              'BofA Client',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 16),
-            const Text(
-              'Data layer implemented with:',
-              style: TextStyle(fontSize: 16),
-            ),
-            const SizedBox(height: 8),
-            const Text('• DTO (Data Transfer Objects)'),
-            const Text('• Repository Pattern'),
-            const Text('• Service Layer'),
-            const Text('• BLoC Pattern'),
-            const SizedBox(height: 32),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const ProductListScreen(),
-                      ),
-                    );
-                  },
-                  child: const Text('View Products'),
-                ),
-                const SizedBox(width: 16),
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const UserListScreen(),
-                      ),
-                    );
-                  },
-                  child: const Text('View Users'),
-                ),
-              ],
-            ),
-          ],
+      child: MultiBlocProvider(
+        providers: [
+          BlocProvider<ProductListBloc>(
+            create: (context) => productListBloc,
+          ),
+          BlocProvider<ProductDetailBloc>(
+            create: (context) => productDetailBloc,
+          ),
+          BlocProvider<UserListBloc>(
+            create: (context) => userListBloc,
+          ),
+          BlocProvider<UserDetailBloc>(
+            create: (context) => userDetailBloc,
+          ),
+          BlocProvider<OrderBloc>(
+            create: (context) => orderBloc,
+          ),
+          BlocProvider<OrderPartBloc>(
+            create: (context) => orderPartBloc,
+          ),
+        ],
+        child: MaterialApp.router(
+          title: 'BofA Client',
+          theme: ThemeData(
+            primarySwatch: Colors.blue,
+            fontFamily: 'Montserrat',
+          ),
+          routerDelegate: appRouter.delegate(),
+          routeInformationParser: appRouter.defaultRouteParser(),
         ),
       ),
     );
