@@ -5,6 +5,8 @@ import 'package:bofa_client/screens/product_detail_screen.dart';
 import 'package:bofa_client/screens/profile_screen.dart';
 import 'package:bofa_client/screens/user_detail_screen.dart';
 import 'package:bofa_client/screens/user_list_screen.dart';
+import 'package:bofa_client/screens/auth/email_auth_screen.dart';
+import 'package:bofa_client/screens/auth/auth_code_screen.dart';
 import 'package:flutter/material.dart';
 
 part 'app_router.gr.dart';
@@ -96,22 +98,14 @@ class AppRouter extends _$AppRouter {
             ),
           ],
         ),
-        // AutoRoute(
-        //   page: PolicyRoute.page,
-        //   path: '/policyScreen',
-        // ),
-        // AutoRoute(
-        //   page: LoginRoute.page,
-        //   path: '/loginScreen',
-        // ),
-        // AutoRoute(
-        //   page: AuthRoute.page,
-        //   path: '/authScreen',
-        // ),
-        // AutoRoute(
-        //   page: AuthCodeRoute.page,
-        //   path: '/authCodeScreen',
-        // )
+        AutoRoute(
+          page: EmailAuthRoute.page,
+          path: '/auth/email',
+        ),
+        AutoRoute(
+          page: AuthCodeRoute.page,
+          path: '/auth/code',
+        ),
       ];
 }
 

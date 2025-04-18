@@ -55,8 +55,8 @@ class _UserFormScreenState extends State<UserFormScreen> {
     );
     // Removed _isActive initialization
     
-    if (widget.isEditing) {
-      _selectedCategories.addAll(widget.user!.categories);
+    if (widget.isEditing && widget.user!.categories != null) {
+      _selectedCategories.addAll(widget.user!.categories!);
     }
   }
 
@@ -168,15 +168,12 @@ class _UserFormScreenState extends State<UserFormScreen> {
             TextFormField(
               controller: _passwordController,
               decoration: const InputDecoration(
-                labelText: 'Password',
+                labelText: 'Password (optional)',
                 border: OutlineInputBorder(),
               ),
               obscureText: true,
               validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Please enter a password';
-                }
-                if (value.length < 6) {
+                if (value != null && value.isNotEmpty && value.length < 6) {
                   return 'Password must be at least 6 characters';
                 }
                 return null;
@@ -259,13 +256,13 @@ class _UserFormScreenState extends State<UserFormScreen> {
         userId: widget.isEditing ? widget.user!.userId : null,
         name: _nameController.text,
         email: _emailController.text,
-        password: _passwordController.text,
-        phoneNumber: _phoneNumberController.text,
+        password: _passwordController.text.isEmpty ? null : _passwordController.text,
+        phoneNumber: _phoneNumberController.text.isEmpty ? null : _phoneNumberController.text,
         isActive: widget.isEditing ? widget.user!.isActive : true, // Default to true for new users
         imageUrl: _imageUrlController.text.isEmpty
             ? null
             : _imageUrlController.text,
-        categories: _selectedCategories,
+        categories: _selectedCategories.isEmpty ? null : _selectedCategories,
       );
 
       if (widget.isEditing) {

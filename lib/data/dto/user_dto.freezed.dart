@@ -26,12 +26,12 @@ mixin _$UserDTO {
   String get email => throw _privateConstructorUsedError;
   @JsonKey(name: 'is_active')
   bool get isActive => throw _privateConstructorUsedError;
-  String get password => throw _privateConstructorUsedError;
+  String? get password => throw _privateConstructorUsedError;
   @JsonKey(name: 'phone_number')
-  String get phoneNumber => throw _privateConstructorUsedError;
+  String? get phoneNumber => throw _privateConstructorUsedError;
   @JsonKey(name: 'image_url')
   String? get imageUrl => throw _privateConstructorUsedError;
-  List<String> get categories => throw _privateConstructorUsedError;
+  List<String>? get categories => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -48,10 +48,10 @@ abstract class $UserDTOCopyWith<$Res> {
       String name,
       String email,
       @JsonKey(name: 'is_active') bool isActive,
-      String password,
-      @JsonKey(name: 'phone_number') String phoneNumber,
+      String? password,
+      @JsonKey(name: 'phone_number') String? phoneNumber,
       @JsonKey(name: 'image_url') String? imageUrl,
-      List<String> categories});
+      List<String>? categories});
 }
 
 /// @nodoc
@@ -71,10 +71,10 @@ class _$UserDTOCopyWithImpl<$Res, $Val extends UserDTO>
     Object? name = null,
     Object? email = null,
     Object? isActive = null,
-    Object? password = null,
-    Object? phoneNumber = null,
+    Object? password = freezed,
+    Object? phoneNumber = freezed,
     Object? imageUrl = freezed,
-    Object? categories = null,
+    Object? categories = freezed,
   }) {
     return _then(_value.copyWith(
       userId: freezed == userId
@@ -93,22 +93,22 @@ class _$UserDTOCopyWithImpl<$Res, $Val extends UserDTO>
           ? _value.isActive
           : isActive // ignore: cast_nullable_to_non_nullable
               as bool,
-      password: null == password
+      password: freezed == password
           ? _value.password
           : password // ignore: cast_nullable_to_non_nullable
-              as String,
-      phoneNumber: null == phoneNumber
+              as String?,
+      phoneNumber: freezed == phoneNumber
           ? _value.phoneNumber
           : phoneNumber // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
       imageUrl: freezed == imageUrl
           ? _value.imageUrl
           : imageUrl // ignore: cast_nullable_to_non_nullable
               as String?,
-      categories: null == categories
+      categories: freezed == categories
           ? _value.categories
           : categories // ignore: cast_nullable_to_non_nullable
-              as List<String>,
+              as List<String>?,
     ) as $Val);
   }
 }
@@ -125,10 +125,10 @@ abstract class _$$UserDTOImplCopyWith<$Res> implements $UserDTOCopyWith<$Res> {
       String name,
       String email,
       @JsonKey(name: 'is_active') bool isActive,
-      String password,
-      @JsonKey(name: 'phone_number') String phoneNumber,
+      String? password,
+      @JsonKey(name: 'phone_number') String? phoneNumber,
       @JsonKey(name: 'image_url') String? imageUrl,
-      List<String> categories});
+      List<String>? categories});
 }
 
 /// @nodoc
@@ -146,10 +146,10 @@ class __$$UserDTOImplCopyWithImpl<$Res>
     Object? name = null,
     Object? email = null,
     Object? isActive = null,
-    Object? password = null,
-    Object? phoneNumber = null,
+    Object? password = freezed,
+    Object? phoneNumber = freezed,
     Object? imageUrl = freezed,
-    Object? categories = null,
+    Object? categories = freezed,
   }) {
     return _then(_$UserDTOImpl(
       userId: freezed == userId
@@ -168,22 +168,22 @@ class __$$UserDTOImplCopyWithImpl<$Res>
           ? _value.isActive
           : isActive // ignore: cast_nullable_to_non_nullable
               as bool,
-      password: null == password
+      password: freezed == password
           ? _value.password
           : password // ignore: cast_nullable_to_non_nullable
-              as String,
-      phoneNumber: null == phoneNumber
+              as String?,
+      phoneNumber: freezed == phoneNumber
           ? _value.phoneNumber
           : phoneNumber // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
       imageUrl: freezed == imageUrl
           ? _value.imageUrl
           : imageUrl // ignore: cast_nullable_to_non_nullable
               as String?,
-      categories: null == categories
+      categories: freezed == categories
           ? _value._categories
           : categories // ignore: cast_nullable_to_non_nullable
-              as List<String>,
+              as List<String>?,
     ));
   }
 }
@@ -196,10 +196,10 @@ class _$UserDTOImpl implements _UserDTO {
       required this.name,
       required this.email,
       @JsonKey(name: 'is_active') required this.isActive,
-      required this.password,
-      @JsonKey(name: 'phone_number') required this.phoneNumber,
+      this.password,
+      @JsonKey(name: 'phone_number') this.phoneNumber,
       @JsonKey(name: 'image_url') this.imageUrl,
-      required final List<String> categories})
+      required final List<String>? categories})
       : _categories = categories;
 
   factory _$UserDTOImpl.fromJson(Map<String, dynamic> json) =>
@@ -216,19 +216,21 @@ class _$UserDTOImpl implements _UserDTO {
   @JsonKey(name: 'is_active')
   final bool isActive;
   @override
-  final String password;
+  final String? password;
   @override
   @JsonKey(name: 'phone_number')
-  final String phoneNumber;
+  final String? phoneNumber;
   @override
   @JsonKey(name: 'image_url')
   final String? imageUrl;
-  final List<String> _categories;
+  final List<String>? _categories;
   @override
-  List<String> get categories {
+  List<String>? get categories {
+    final value = _categories;
+    if (value == null) return null;
     if (_categories is EqualUnmodifiableListView) return _categories;
     // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_categories);
+    return EqualUnmodifiableListView(value);
   }
 
   @override
@@ -289,10 +291,10 @@ abstract class _UserDTO implements UserDTO {
       required final String name,
       required final String email,
       @JsonKey(name: 'is_active') required final bool isActive,
-      required final String password,
-      @JsonKey(name: 'phone_number') required final String phoneNumber,
+      final String? password,
+      @JsonKey(name: 'phone_number') final String? phoneNumber,
       @JsonKey(name: 'image_url') final String? imageUrl,
-      required final List<String> categories}) = _$UserDTOImpl;
+      required final List<String>? categories}) = _$UserDTOImpl;
 
   factory _UserDTO.fromJson(Map<String, dynamic> json) = _$UserDTOImpl.fromJson;
 
@@ -307,15 +309,15 @@ abstract class _UserDTO implements UserDTO {
   @JsonKey(name: 'is_active')
   bool get isActive;
   @override
-  String get password;
+  String? get password;
   @override
   @JsonKey(name: 'phone_number')
-  String get phoneNumber;
+  String? get phoneNumber;
   @override
   @JsonKey(name: 'image_url')
   String? get imageUrl;
   @override
-  List<String> get categories;
+  List<String>? get categories;
   @override
   @JsonKey(ignore: true)
   _$$UserDTOImplCopyWith<_$UserDTOImpl> get copyWith =>
