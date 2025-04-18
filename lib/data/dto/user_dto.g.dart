@@ -12,11 +12,11 @@ _$UserDTOImpl _$$UserDTOImplFromJson(Map<String, dynamic> json) =>
       name: json['name'] as String,
       email: json['email'] as String,
       isActive: json['is_active'] as bool,
-      password: json['password'] as String,
-      phoneNumber: json['phone_number'] as String,
+      password: json['password'] as String?,
+      phoneNumber: json['phone_number'] as String?,
       imageUrl: json['image_url'] as String?,
-      categories: (json['categories'] as List<dynamic>)
-          .map((e) => e as String)
+      categories: (json['categories'] as List<dynamic>?)
+          ?.map((e) => e as String)
           .toList(),
     );
 
@@ -33,9 +33,9 @@ Map<String, dynamic> _$$UserDTOImplToJson(_$UserDTOImpl instance) {
   val['name'] = instance.name;
   val['email'] = instance.email;
   val['is_active'] = instance.isActive;
-  val['password'] = instance.password;
-  val['phone_number'] = instance.phoneNumber;
+  writeNotNull('password', instance.password);
+  writeNotNull('phone_number', instance.phoneNumber);
   writeNotNull('image_url', instance.imageUrl);
-  val['categories'] = instance.categories;
+  writeNotNull('categories', instance.categories);
   return val;
 }

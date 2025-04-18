@@ -15,6 +15,19 @@ abstract class _$AppRouter extends RootStackRouter {
 
   @override
   final Map<String, PageFactory> pagesMap = {
+    AuthCodeRoute.name: (routeData) {
+      final queryParams = routeData.queryParams;
+      final args = routeData.argsAs<AuthCodeRouteArgs>(
+          orElse: () =>
+              AuthCodeRouteArgs(email: queryParams.optString('email')));
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: AuthCodeScreen(
+          email: args.email,
+          key: args.key,
+        ),
+      );
+    },
     CartRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
@@ -25,6 +38,12 @@ abstract class _$AppRouter extends RootStackRouter {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: const CartTabPage(),
+      );
+    },
+    EmailAuthRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const EmailAuthScreen(),
       );
     },
     HomeRoute.name: (routeData) {
@@ -81,6 +100,45 @@ abstract class _$AppRouter extends RootStackRouter {
 }
 
 /// generated route for
+/// [AuthCodeScreen]
+class AuthCodeRoute extends PageRouteInfo<AuthCodeRouteArgs> {
+  AuthCodeRoute({
+    String? email,
+    Key? key,
+    List<PageRouteInfo>? children,
+  }) : super(
+          AuthCodeRoute.name,
+          args: AuthCodeRouteArgs(
+            email: email,
+            key: key,
+          ),
+          rawQueryParams: {'email': email},
+          initialChildren: children,
+        );
+
+  static const String name = 'AuthCodeRoute';
+
+  static const PageInfo<AuthCodeRouteArgs> page =
+      PageInfo<AuthCodeRouteArgs>(name);
+}
+
+class AuthCodeRouteArgs {
+  const AuthCodeRouteArgs({
+    this.email,
+    this.key,
+  });
+
+  final String? email;
+
+  final Key? key;
+
+  @override
+  String toString() {
+    return 'AuthCodeRouteArgs{email: $email, key: $key}';
+  }
+}
+
+/// generated route for
 /// [CartScreen]
 class CartRoute extends PageRouteInfo<void> {
   const CartRoute({List<PageRouteInfo>? children})
@@ -104,6 +162,20 @@ class CartTab extends PageRouteInfo<void> {
         );
 
   static const String name = 'CartTab';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [EmailAuthScreen]
+class EmailAuthRoute extends PageRouteInfo<void> {
+  const EmailAuthRoute({List<PageRouteInfo>? children})
+      : super(
+          EmailAuthRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'EmailAuthRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
 }

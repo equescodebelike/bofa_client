@@ -140,7 +140,7 @@ class UserDetailScreen extends StatelessWidget {
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     Text(
-                                      user.categories.length.toString(),
+                                      user.categories?.length.toString() ?? 'null',
                                       style: const TextStyle(
                                         fontSize: 16,
                                         color: AppColor.white,
@@ -188,16 +188,17 @@ class UserDetailScreen extends StatelessWidget {
                               ],
                             ),
                             const SizedBox(height: 8),
-                            Row(
-                              children: [
-                                const Icon(Icons.phone, color: Colors.grey, size: 16),
-                                const SizedBox(width: 4),
-                                Text(
-                                  user.phoneNumber,
-                                  style: AppTypography.label,
-                                ),
-                              ],
-                            ),
+                            if (user.phoneNumber != null)
+                              Row(
+                                children: [
+                                  const Icon(Icons.phone, color: Colors.grey, size: 16),
+                                  const SizedBox(width: 4),
+                                  Text(
+                                    user.phoneNumber!,
+                                    style: AppTypography.label,
+                                  ),
+                                ],
+                              ),
                           ],
                         ),
                       ),
@@ -215,7 +216,7 @@ class UserDetailScreen extends StatelessWidget {
                       const Text('3.5'),
                       const Spacer(),
                       Text(
-                        '${user.categories.length} categories >',
+                        '${user.categories?.length} categories >',
                         style: AppTypography.personalCardTitle,
                       ),
                     ],
@@ -223,7 +224,7 @@ class UserDetailScreen extends StatelessWidget {
                 ),
                 
                 // Categories
-                CategoriesList(list: user.categories),
+                CategoriesList(list: user.categories ?? []),
                 
                 // User's Products
                 Padding(
