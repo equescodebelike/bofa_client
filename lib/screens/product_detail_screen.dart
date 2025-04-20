@@ -2,13 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../bloc/product_detail/product_detail_barrel.dart';
+import '../bloc/auth/auth_barrel.dart';
+import '../bloc/cart/cart_barrel.dart';
 import '../data/dto/product_dto.dart';
 import '../theme/app_typography.dart';
 import '../theme/color_const.dart';
 import '../screens/ui_kit/custom_filled_button.dart';
+import '../navigation/app_router.dart';
 import 'product_form_screen.dart';
 
 @RoutePage()
@@ -68,6 +70,18 @@ class ProductDetailScreen extends StatelessWidget {
   }
 
   Widget _buildProductDetails(BuildContext context, ProductDTO product) {
+    // Get current user from AuthBloc
+    final authState = context.watch<AuthBloc>().state;
+    final bool isOwner = authState is AuthSuccess && 
+                         authState.user != null && 
+                         authState.user!.userId == product.userId;
+    
+    // Check if product is in cart
+    final cartState = context.watch<CartBloc>().state;
+    final bool isInCart = cartState is CartLoaded && 
+                         cartState.cart.items.any((item) => 
+                           item.productId == product.productId);
+    
     return SafeArea(
       minimum: const EdgeInsets.only(left: 24, right: 24),
       child: Column(
@@ -165,42 +179,77 @@ class ProductDetailScreen extends StatelessWidget {
                 
                 const SizedBox(width: 20),
                 
-                // Edit button
-                SizedBox(
-                  width: 130,
-                  child: CustomFilledButton(
-                    text: 'Edit',
-                    onTap: () {
-                      // Navigate to edit product screen
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => ProductFormScreen(
-                            product: product,
+                // Show Edit/Delete buttons only if user is the owner
+                if (isOwner) ...[
+                  // Edit button
+                  SizedBox(
+                    width: 130,
+                    child: CustomFilledButton(
+                      text: 'Edit',
+                      onTap: () {
+                        // Navigate to edit product screen
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ProductFormScreen(
+                              product: product,
+                            ),
                           ),
-                        ),
-                      ).then((_) {
-                        // Refresh product details when returning from form
-                        context.read<ProductDetailBloc>().add(FetchProductDetail(product.productId!));
-                      });
-                    },
+                        ).then((_) {
+                          // Refresh product details when returning from form
+                          context.read<ProductDetailBloc>().add(FetchProductDetail(product.productId!));
+                        });
+                      },
+                    ),
                   ),
-                ),
-                
-                const SizedBox(width: 10),
-                
-                // Delete button
-                SizedBox(
-                  width: 130,
-                  child: CustomFilledButton(
-                    text: 'Delete',
-                    fillColor: AppColor.red,
-                    onTap: () {
-                      // Show delete confirmation dialog
-                      _showDeleteConfirmationDialog(context, product);
-                    },
+                  
+                  const SizedBox(width: 10),
+                  
+                  // Delete button
+                  SizedBox(
+                    width: 130,
+                    child: CustomFilledButton(
+                      text: 'Delete',
+                      fillColor: AppColor.red,
+                      onTap: () {
+                        // Show delete confirmation dialog
+                        _showDeleteConfirmationDialog(context, product);
+                      },
+                    ),
                   ),
-                ),
+                ],
+                
+                // Show Add to Cart button only if user is NOT the owner
+                if (!isOwner)
+                  SizedBox(
+                    width: 270,
+                    child: CustomFilledButton(
+                      text: isInCart ? 'In Cart' : 'Add to Cart',
+                      onTap: () {
+                        if (!isInCart) {
+                          // Add to cart with default size of 1
+                          context.read<CartBloc>().add(AddToCart(product.productId!, 1));
+                          
+                          // Show success message
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text('${product.name} added to cart'),
+                              duration: const Duration(seconds: 2),
+                              action: SnackBarAction(
+                                label: 'View Cart',
+                                onPressed: () {
+                                  context.router.navigate(const CartTab());
+                                },
+                              ),
+                            ),
+                          );
+                        } else {
+                          // Navigate to cart screen if product is already in cart
+                          context.router.navigate(const CartTab());
+                        }
+                      },
+                    ),
+                  ),
               ],
             ),
           ),
@@ -227,7 +276,7 @@ class ProductDetailScreen extends StatelessWidget {
               Navigator.of(context).pop();
               context.read<ProductDetailBloc>().add(UpdateProductDetail(
                     product.productId!,
-                    product.copyWith(name: product.name + " (deleted)"),
+                    product.copyWith(name: "${product.name} (deleted)"),
                   ));
               // Navigate back to the product list screen
               Navigator.of(context).pop();
