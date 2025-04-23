@@ -20,7 +20,7 @@ part 'api_client.g.dart';
 ApiClient createApiClient(Dio dio, AuthRepository authRepository) {
   const timeout = Duration(seconds: 30);
   dio.options
-    ..baseUrl = 'http://localhost:8084'
+    ..baseUrl = 'https://movelife.fittin.ru'
     ..contentType = Headers.jsonContentType
     ..connectTimeout = timeout
     ..receiveTimeout = timeout

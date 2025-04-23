@@ -1,9 +1,15 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:bofa_client/data/dto/user_dto.dart';
 import 'package:bofa_client/screens/cart_screen.dart';
+import 'package:bofa_client/screens/favorites_screen.dart';
 import 'package:bofa_client/screens/home_screen.dart';
+import 'package:bofa_client/screens/order_screen.dart';
+import 'package:bofa_client/screens/order_success_screen.dart';
 import 'package:bofa_client/screens/product_detail_screen.dart';
 import 'package:bofa_client/screens/profile_screen.dart';
+import 'package:bofa_client/screens/user_data_screen.dart';
 import 'package:bofa_client/screens/user_detail_screen.dart';
+import 'package:bofa_client/screens/user_form_screen.dart';
 import 'package:bofa_client/screens/user_list_screen.dart';
 import 'package:bofa_client/screens/auth/email_auth_screen.dart';
 import 'package:bofa_client/screens/auth/auth_code_screen.dart';
@@ -52,12 +58,12 @@ class AppRouter extends _$AppRouter {
                   initial: true,
                   page: CartRoute.page,
                 ),
-                // AutoRoute(
-                //   page: OrderRoute.page,
-                // ),
-                // AutoRoute(
-                //   page: OrderSuccessRoute.page,
-                // ),
+                AutoRoute(
+                  page: OrderRoute.page,
+                ),
+                AutoRoute(
+                  page: OrderSuccessRoute.page,
+                ),
                 AutoRoute(
                   page: ProductDetailRoute.page,
                   path: 'product/:productId',
@@ -71,19 +77,24 @@ class AppRouter extends _$AppRouter {
                   page: ProfileRoute.page,
                   initial: true,
                 ),
+                AutoRoute(
+                  page: FavoritesRoute.page,
+                  path: 'favorites',
+                ),
+                AutoRoute(
+                  page: ProductDetailRoute.page,
+                  path: 'product/:productId',
+                ),
+                AutoRoute(
+                  page: UserDataRoute.page,
+                  path: 'user-data',
+                ),
                 // AutoRoute(
                 //   page: OrderHistoryRoute.page,
                 // ),
                 // AutoRoute(
-                //   page: ProductRoute.page,
-                //   path: 'product/:productId',
-                // ),
-                // AutoRoute(
                 //   page: ShopEditRoute.page,
                 //   path: 'shopedit/:shopId',
-                // ),
-                // AutoRoute(
-                //   page: FavoriteRoute.page,
                 // ),
                 // AutoRoute(
                 //   page: FavoriteCategoriesRoute.page,

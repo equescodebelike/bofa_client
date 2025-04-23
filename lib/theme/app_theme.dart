@@ -13,6 +13,7 @@ ThemeData appTheme({ColorScheme? colorScheme, bool isDark = false}) {
         titleTextStyle: TextStyle(color: AppColor.black)),
     navigationBarTheme: const NavigationBarThemeData(
       indicatorColor: Colors.transparent,
+      overlayColor: WidgetStatePropertyAll(Colors.transparent),
       backgroundColor: Colors.white,
       elevation: 20,
     ),

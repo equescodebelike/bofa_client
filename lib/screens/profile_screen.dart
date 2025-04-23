@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:bofa_client/navigation/app_router.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:bofa_client/bloc/auth/auth_barrel.dart';
@@ -16,9 +17,7 @@ class ProfileScreen extends StatelessWidget {
             title: const Text('Профиль'),
             centerTitle: true,
           ),
-          body: state is AuthSuccess
-              ? ProfileCardsAuthorized(user: state.user)
-              : const ProfileCardsUnauthorized(),
+          body: state is AuthSuccess ? ProfileCardsAuthorized(user: state.user) : const ProfileCardsUnauthorized(),
         );
       },
     );
@@ -37,38 +36,21 @@ class ProfileCardsAuthorized extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        SizedBox(
-          height: 45,
-          child: ListTile(
-            title: Text(
-              'Мои данные',
-              style: Theme.of(context).textTheme.titleMedium,
-            ),
-            trailing: const Icon(
-              Icons.arrow_forward_ios_rounded,
-              size: 20,
-            ),
-          ),
-        ),
-        const Padding(
-          padding: EdgeInsets.only(
-            left: 16,
-            right: 16,
-          ),
-          child: Divider(
-            thickness: 1.7,
-          ),
-        ),
-        SizedBox(
-          height: 45,
-          child: ListTile(
-            title: Text(
-              'Заказы',
-              style: Theme.of(context).textTheme.titleMedium,
-            ),
-            trailing: const Icon(
-              Icons.arrow_forward_ios_rounded,
-              size: 20,
+        GestureDetector(
+          onTap: () {
+            context.router.push(UserDataRoute());
+          },
+          child: SizedBox(
+            height: 45,
+            child: ListTile(
+              title: Text(
+                'Мои данные',
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
+              trailing: const Icon(
+                Icons.arrow_forward_ios_rounded,
+                size: 20,
+              ),
             ),
           ),
         ),
@@ -81,16 +63,43 @@ class ProfileCardsAuthorized extends StatelessWidget {
             thickness: 1.7,
           ),
         ),
-        SizedBox(
-          height: 45,
-          child: ListTile(
-            title: Text(
-              'Избранное',
-              style: Theme.of(context).textTheme.titleMedium,
-            ),
-            trailing: const Icon(
-              Icons.arrow_forward_ios_rounded,
-              size: 20,
+        // SizedBox(
+        //   height: 45,
+        //   child: ListTile(
+        //     title: Text(
+        //       'Заказы',
+        //       style: Theme.of(context).textTheme.titleMedium,
+        //     ),
+        //     trailing: const Icon(
+        //       Icons.arrow_forward_ios_rounded,
+        //       size: 20,
+        //     ),
+        //   ),
+        // ),
+        // const Padding(
+        //   padding: EdgeInsets.only(
+        //     left: 16,
+        //     right: 16,
+        //   ),
+        //   child: Divider(
+        //     thickness: 1.7,
+        //   ),
+        // ),
+        GestureDetector(
+          onTap: () {
+            context.router.push(FavoritesRoute());
+          },
+          child: SizedBox(
+            height: 45,
+            child: ListTile(
+              title: Text(
+                'Избранное',
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
+              trailing: const Icon(
+                Icons.arrow_forward_ios_rounded,
+                size: 20,
+              ),
             ),
           ),
         ),
@@ -211,36 +220,36 @@ class ProfileCardsUnauthorized extends StatelessWidget {
             thickness: 1.7,
           ),
         ),
+        // GestureDetector(
+        //   onTap: () {
+        //     context.router.pushNamed('/auth/email');
+        //   },
+        //   child: SizedBox(
+        //     height: 45,
+        //     child: ListTile(
+        //       title: Text(
+        //         'Заказы',
+        //         style: Theme.of(context).textTheme.titleMedium,
+        //       ),
+        //       trailing: const Icon(
+        //         Icons.arrow_forward_ios_rounded,
+        //         size: 20,
+        //       ),
+        //     ),
+        //   ),
+        // ),
+        // const Padding(
+        //   padding: EdgeInsets.only(
+        //     left: 16,
+        //     right: 16,
+        //   ),
+        //   child: Divider(
+        //     thickness: 1.7,
+        //   ),
+        // ),
         GestureDetector(
           onTap: () {
-            context.router.pushNamed('/auth/email');
-          },
-          child: SizedBox(
-            height: 45,
-            child: ListTile(
-              title: Text(
-                'Заказы',
-                style: Theme.of(context).textTheme.titleMedium,
-              ),
-              trailing: const Icon(
-                Icons.arrow_forward_ios_rounded,
-                size: 20,
-              ),
-            ),
-          ),
-        ),
-        const Padding(
-          padding: EdgeInsets.only(
-            left: 16,
-            right: 16,
-          ),
-          child: Divider(
-            thickness: 1.7,
-          ),
-        ),
-        GestureDetector(
-          onTap: () {
-            context.router.pushNamed('/auth/email');
+            context.router.push(FavoritesRoute());
           },
           child: SizedBox(
             height: 45,

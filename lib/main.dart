@@ -1,3 +1,4 @@
+import 'package:bofa_client/bloc/user/user_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:dio/dio.dart';
@@ -61,8 +62,9 @@ void main() async {
   final userDetailBloc = UserDetailBloc(userService);
   final orderBloc = OrderBloc(orderService);
   final orderPartBloc = OrderPartBloc(orderPartService);
-  final cartBloc = CartBloc(cartService);
   final authBloc = AuthBloc(authService);
+  final cartBloc = CartBloc(cartService, authService, authBloc);
+  final userBloc = UserBloc(userService);
 
   runApp(MainApp(
     productListBloc: productListBloc,
@@ -75,6 +77,7 @@ void main() async {
     authBloc: authBloc,
     authRepository: authRepository,
     apiClient: apiClient,
+    userBloc: userBloc,
     dio: dio,
   ));
 }
@@ -90,6 +93,7 @@ class MainApp extends StatelessWidget {
   final AuthBloc authBloc;
   final AuthRepository authRepository;
   final ApiClient apiClient;
+  final UserBloc userBloc;
   final Dio dio;
 
   MainApp({
@@ -104,6 +108,7 @@ class MainApp extends StatelessWidget {
     required this.authBloc,
     required this.authRepository,
     required this.apiClient,
+    required this.userBloc,
     required this.dio,
   });
 
@@ -163,8 +168,12 @@ class MainApp extends StatelessWidget {
           BlocProvider<AuthBloc>(
             create: (context) => authBloc,
           ),
+          BlocProvider<UserBloc>(
+            create: (context) => userBloc,
+          )
         ],
         child: MaterialApp.router(
+          debugShowCheckedModeBanner: false,
           title: 'BofA Client',
           theme: ThemeData(
             primarySwatch: Colors.blue,

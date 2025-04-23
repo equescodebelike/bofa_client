@@ -33,7 +33,7 @@ class _UserListScreenState extends State<UserListScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Users'),
+        title: const Text('Магазины'),
       ),
       body: SafeArea(
         child: Padding(
@@ -86,36 +86,36 @@ class _UserListScreenState extends State<UserListScreen> {
           ),
         ),
       ),
-      floatingActionButton: Column(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          FloatingActionButton(
-            onPressed: () {
-              // Navigate to create user screen
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const UserFormScreen(),
-                ),
-              ).then((_) {
-                // Refresh users when returning from form
-                context.read<UserListBloc>().add(const FetchUserList());
-              });
-            },
-            heroTag: 'createUser',
-            child: const Icon(Icons.add),
-          ),
-          const SizedBox(height: 16),
-          FloatingActionButton(
-            onPressed: () {
-              // Refresh users
-              context.read<UserListBloc>().add(const FetchUserList());
-            },
-            heroTag: 'refreshUsers',
-            child: const Icon(Icons.refresh),
-          ),
-        ],
-      ),
+      // floatingActionButton: Column(
+      //   mainAxisAlignment: MainAxisAlignment.end,
+      //   children: [
+      //     FloatingActionButton(
+      //       onPressed: () {
+      //         // Navigate to create user screen
+      //         Navigator.push(
+      //           context,
+      //           MaterialPageRoute(
+      //             builder: (context) => const UserFormScreen(),
+      //           ),
+      //         ).then((_) {
+      //           // Refresh users when returning from form
+      //           context.read<UserListBloc>().add(const FetchUserList());
+      //         });
+      //       },
+      //       heroTag: 'createUser',
+      //       child: const Icon(Icons.add),
+      //     ),
+      //     const SizedBox(height: 16),
+      //     FloatingActionButton(
+      //       onPressed: () {
+      //         // Refresh users
+      //         context.read<UserListBloc>().add(const FetchUserList());
+      //       },
+      //       heroTag: 'refreshUsers',
+      //       child: const Icon(Icons.refresh),
+      //     ),
+      //   ],
+      // ),
     );
   }
 
@@ -123,12 +123,8 @@ class _UserListScreenState extends State<UserListScreen> {
     return TextField(
       enabled: false,
       decoration: InputDecoration(
-        hintText: 'Search',
+        hintText: 'Поиск',
         prefixIcon: Icon(Icons.search),
-        suffixIcon: IconButton(
-          icon: Icon(Icons.clear),
-          onPressed: () {},
-        ),
       ),
     );
   }
@@ -163,7 +159,7 @@ class _UserListScreenState extends State<UserListScreen> {
       );
     }
 
-    return _buildUserList(users, 'All Users');
+    return _buildUserList(users, 'Все пользователи');
   }
 
   Widget _buildUserList(List<UserDTO> users, String category) {
@@ -192,6 +188,7 @@ class _UserListScreenState extends State<UserListScreen> {
                       MaterialPageRoute(
                         builder: (context) => UserDetailScreen(
                           userId: user.userId!,
+                          userName: user.name,
                         ),
                       ),
                     );

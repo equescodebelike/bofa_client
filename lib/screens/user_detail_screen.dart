@@ -17,23 +17,32 @@ import '../screens/ui_kit/product_card/product_grid_view.dart';
 import 'user_form_screen.dart';
 
 @RoutePage()
-class UserDetailScreen extends StatelessWidget {
+class UserDetailScreen extends StatefulWidget {
   final int userId;
+  final String userName;
 
   const UserDetailScreen({
     super.key,
     required this.userId,
+    required this.userName,
   });
 
   @override
-  Widget build(BuildContext context) {
-    // Fetch the user details when the screen is built
-    context.read<UserDetailBloc>().add(FetchUserDetail(userId));
+  State<UserDetailScreen> createState() => _UserDetailScreenState();
+}
 
+class _UserDetailScreenState extends State<UserDetailScreen> {
+  @override
+  void initState() {
+    super.initState();
+        context.read<UserDetailBloc>().add(FetchUserDetail(widget.userId));
+  }
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'User Details',
+        title: Text(
+          widget.userName,
           style: AppTypography.personalCardTitle,
         ),
         centerTitle: true,
@@ -106,58 +115,60 @@ class UserDetailScreen extends StatelessWidget {
                         ),
                         child: Stack(
                           children: [
-                            CachedNetworkImage(
-                              fit: BoxFit.cover,
-                              imageUrl: user.imageUrl ?? '',
-                              progressIndicatorBuilder: (_, __, ___) {
-                                return const Center(
-                                  child: CircularProgressIndicator(),
-                                );
-                              },
-                              errorWidget: (_, __, ___) {
-                                return Container(
-                                  color: Colors.grey[200],
-                                  child: const Icon(
-                                    Icons.person,
-                                    size: 50,
-                                    color: Colors.grey,
-                                  ),
-                                );
-                              },
+                            Center(
+                              child: CachedNetworkImage(
+                                fit: BoxFit.contain,
+                                imageUrl: user.imageUrl ?? '',
+                                progressIndicatorBuilder: (_, __, ___) {
+                                  return const Center(
+                                    child: CircularProgressIndicator(),
+                                  );
+                                },
+                                errorWidget: (_, __, ___) {
+                                  return Container(
+                                    color: Colors.grey[200],
+                                    child: const Icon(
+                                      Icons.person,
+                                      size: 50,
+                                      color: Colors.grey,
+                                    ),
+                                  );
+                                },
+                              ),
                             ),
                             // Add a badge in the top right corner
-                            Positioned(
-                              right: 10,
-                              top: 8,
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(5),
-                                  color: AppColor.green,
-                                ),
-                                height: 24,
-                                width: 67,
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      user.categories?.length.toString() ?? 'null',
-                                      style: const TextStyle(
-                                        fontSize: 16,
-                                        color: AppColor.white,
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                    ),
-                                    const SizedBox(width: 4),
-                                    SvgPicture.asset(
-                                      'assets/svg/info.svg',
-                                      height: 18,
-                                      width: 18,
-                                      color: AppColor.white,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            )
+                            // Positioned(
+                            //   right: 10,
+                            //   top: 8,
+                            //   child: Container(
+                            //     decoration: BoxDecoration(
+                            //       borderRadius: BorderRadius.circular(5),
+                            //       color: AppColor.green,
+                            //     ),
+                            //     height: 24,
+                            //     width: 67,
+                            //     child: Row(
+                            //       mainAxisAlignment: MainAxisAlignment.center,
+                            //       children: [
+                            //         Text(
+                            //           user.categories?.length.toString() ?? 'null',
+                            //           style: const TextStyle(
+                            //             fontSize: 16,
+                            //             color: AppColor.white,
+                            //             fontWeight: FontWeight.w600,
+                            //           ),
+                            //         ),
+                            //         const SizedBox(width: 4),
+                            //         SvgPicture.asset(
+                            //           'assets/svg/info.svg',
+                            //           height: 18,
+                            //           width: 18,
+                            //           color: AppColor.white,
+                            //         ),
+                            //       ],
+                            //     ),
+                            //   ),
+                            // )
                           ],
                         ),
                       ),
@@ -216,7 +227,7 @@ class UserDetailScreen extends StatelessWidget {
                       const Text('3.5'),
                       const Spacer(),
                       Text(
-                        '${user.categories?.length} categories >',
+                        '${user.categories?.length} категории',
                         style: AppTypography.personalCardTitle,
                       ),
                     ],
@@ -252,7 +263,7 @@ class UserDetailScreen extends StatelessWidget {
                             const Padding(
                               padding: EdgeInsets.all(16.0),
                               child: Text(
-                                'User Products',
+                                'Товары магазина',
                                 style: TextStyle(
                                   fontSize: 18,
                                   fontWeight: FontWeight.bold,
@@ -287,27 +298,27 @@ class UserDetailScreen extends StatelessWidget {
                   ),
                 ),
                 
-                // Action button
-                Padding(
-                  padding: const EdgeInsets.only(top: 24, bottom: 16),
-                  child: CustomFilledButton(
-                    text: 'Edit User',
-                    onTap: () {
-                      // Navigate to edit user screen
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => UserFormScreen(
-                            user: user,
-                          ),
-                        ),
-                      ).then((_) {
-                        // Refresh user details when returning from form
-                        context.read<UserDetailBloc>().add(FetchUserDetail(user.userId!));
-                      });
-                    },
-                  ),
-                ),
+                // // Action button
+                // Padding(
+                //   padding: const EdgeInsets.only(top: 24, bottom: 16),
+                //   child: CustomFilledButton(
+                //     text: 'Edit User',
+                //     onTap: () {
+                //       // Navigate to edit user screen
+                //       Navigator.push(
+                //         context,
+                //         MaterialPageRoute(
+                //           builder: (context) => UserFormScreen(
+                //             user: user,
+                //           ),
+                //         ),
+                //       ).then((_) {
+                //         // Refresh user details when returning from form
+                //         context.read<UserDetailBloc>().add(FetchUserDetail(user.userId!));
+                //       });
+                //     },
+                //   ),
+                // ),
               ],
             ),
           ),
@@ -315,7 +326,7 @@ class UserDetailScreen extends StatelessWidget {
       ),
     );
   }
-  
+
   Widget _buildRatingStars(double rating) {
     final List<Widget> stars = [];
     final int activeStarsCount = rating.floor();

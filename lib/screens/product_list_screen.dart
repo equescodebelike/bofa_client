@@ -142,6 +142,7 @@ class _ProductListScreenState extends State<ProductListScreen> {
                 MaterialPageRoute(
                   builder: (context) => ProductDetailScreen(
                     productId: product.productId!,
+                    productName: product.name,
                   ),
                 ),
               );

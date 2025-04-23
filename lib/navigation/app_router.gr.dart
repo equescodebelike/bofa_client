@@ -46,10 +46,37 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const EmailAuthScreen(),
       );
     },
+    FavoritesRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const FavoritesScreen(),
+      );
+    },
     HomeRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: const HomeScreen(),
+      );
+    },
+    OrderRoute.name: (routeData) {
+      final args = routeData.argsAs<OrderRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: OrderScreen(
+          key: args.key,
+          sum: args.sum,
+          productId: args.productId,
+        ),
+      );
+    },
+    OrderSuccessRoute.name: (routeData) {
+      final args = routeData.argsAs<OrderSuccessRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: OrderSuccessScreen(
+          productId: args.productId,
+          key: args.key,
+        ),
       );
     },
     ProductDetailRoute.name: (routeData) {
@@ -59,6 +86,7 @@ abstract class _$AppRouter extends RootStackRouter {
         child: ProductDetailScreen(
           key: args.key,
           productId: args.productId,
+          productName: args.productName,
         ),
       );
     },
@@ -80,6 +108,12 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const ShowCaseTabPage(),
       );
     },
+    UserDataRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const UserDataScreen(),
+      );
+    },
     UserDetailRoute.name: (routeData) {
       final args = routeData.argsAs<UserDetailRouteArgs>();
       return AutoRoutePage<dynamic>(
@@ -87,6 +121,7 @@ abstract class _$AppRouter extends RootStackRouter {
         child: UserDetailScreen(
           key: args.key,
           userId: args.userId,
+          userName: args.userName,
         ),
       );
     },
@@ -181,6 +216,20 @@ class EmailAuthRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
+/// [FavoritesScreen]
+class FavoritesRoute extends PageRouteInfo<void> {
+  const FavoritesRoute({List<PageRouteInfo>? children})
+      : super(
+          FavoritesRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'FavoritesRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
 /// [HomeScreen]
 class HomeRoute extends PageRouteInfo<void> {
   const HomeRoute({List<PageRouteInfo>? children})
@@ -195,17 +244,99 @@ class HomeRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
+/// [OrderScreen]
+class OrderRoute extends PageRouteInfo<OrderRouteArgs> {
+  OrderRoute({
+    Key? key,
+    required String sum,
+    required String productId,
+    List<PageRouteInfo>? children,
+  }) : super(
+          OrderRoute.name,
+          args: OrderRouteArgs(
+            key: key,
+            sum: sum,
+            productId: productId,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'OrderRoute';
+
+  static const PageInfo<OrderRouteArgs> page = PageInfo<OrderRouteArgs>(name);
+}
+
+class OrderRouteArgs {
+  const OrderRouteArgs({
+    this.key,
+    required this.sum,
+    required this.productId,
+  });
+
+  final Key? key;
+
+  final String sum;
+
+  final String productId;
+
+  @override
+  String toString() {
+    return 'OrderRouteArgs{key: $key, sum: $sum, productId: $productId}';
+  }
+}
+
+/// generated route for
+/// [OrderSuccessScreen]
+class OrderSuccessRoute extends PageRouteInfo<OrderSuccessRouteArgs> {
+  OrderSuccessRoute({
+    required String productId,
+    Key? key,
+    List<PageRouteInfo>? children,
+  }) : super(
+          OrderSuccessRoute.name,
+          args: OrderSuccessRouteArgs(
+            productId: productId,
+            key: key,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'OrderSuccessRoute';
+
+  static const PageInfo<OrderSuccessRouteArgs> page =
+      PageInfo<OrderSuccessRouteArgs>(name);
+}
+
+class OrderSuccessRouteArgs {
+  const OrderSuccessRouteArgs({
+    required this.productId,
+    this.key,
+  });
+
+  final String productId;
+
+  final Key? key;
+
+  @override
+  String toString() {
+    return 'OrderSuccessRouteArgs{productId: $productId, key: $key}';
+  }
+}
+
+/// generated route for
 /// [ProductDetailScreen]
 class ProductDetailRoute extends PageRouteInfo<ProductDetailRouteArgs> {
   ProductDetailRoute({
     Key? key,
     required int productId,
+    required String productName,
     List<PageRouteInfo>? children,
   }) : super(
           ProductDetailRoute.name,
           args: ProductDetailRouteArgs(
             key: key,
             productId: productId,
+            productName: productName,
           ),
           initialChildren: children,
         );
@@ -220,15 +351,18 @@ class ProductDetailRouteArgs {
   const ProductDetailRouteArgs({
     this.key,
     required this.productId,
+    required this.productName,
   });
 
   final Key? key;
 
   final int productId;
 
+  final String productName;
+
   @override
   String toString() {
-    return 'ProductDetailRouteArgs{key: $key, productId: $productId}';
+    return 'ProductDetailRouteArgs{key: $key, productId: $productId, productName: $productName}';
   }
 }
 
@@ -275,17 +409,33 @@ class ShowCaseTab extends PageRouteInfo<void> {
 }
 
 /// generated route for
+/// [UserDataScreen]
+class UserDataRoute extends PageRouteInfo<void> {
+  const UserDataRoute({List<PageRouteInfo>? children})
+      : super(
+          UserDataRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'UserDataRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
 /// [UserDetailScreen]
 class UserDetailRoute extends PageRouteInfo<UserDetailRouteArgs> {
   UserDetailRoute({
     Key? key,
     required int userId,
+    required String userName,
     List<PageRouteInfo>? children,
   }) : super(
           UserDetailRoute.name,
           args: UserDetailRouteArgs(
             key: key,
             userId: userId,
+            userName: userName,
           ),
           initialChildren: children,
         );
@@ -300,15 +450,18 @@ class UserDetailRouteArgs {
   const UserDetailRouteArgs({
     this.key,
     required this.userId,
+    required this.userName,
   });
 
   final Key? key;
 
   final int userId;
 
+  final String userName;
+
   @override
   String toString() {
-    return 'UserDetailRouteArgs{key: $key, userId: $userId}';
+    return 'UserDetailRouteArgs{key: $key, userId: $userId, userName: $userName}';
   }
 }
 

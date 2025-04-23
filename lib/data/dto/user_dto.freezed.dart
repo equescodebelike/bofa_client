@@ -26,7 +26,6 @@ mixin _$UserDTO {
   String get email => throw _privateConstructorUsedError;
   @JsonKey(name: 'is_active')
   bool get isActive => throw _privateConstructorUsedError;
-  String? get password => throw _privateConstructorUsedError;
   @JsonKey(name: 'phone_number')
   String? get phoneNumber => throw _privateConstructorUsedError;
   @JsonKey(name: 'image_url')
@@ -48,7 +47,6 @@ abstract class $UserDTOCopyWith<$Res> {
       String name,
       String email,
       @JsonKey(name: 'is_active') bool isActive,
-      String? password,
       @JsonKey(name: 'phone_number') String? phoneNumber,
       @JsonKey(name: 'image_url') String? imageUrl,
       List<String>? categories});
@@ -71,7 +69,6 @@ class _$UserDTOCopyWithImpl<$Res, $Val extends UserDTO>
     Object? name = null,
     Object? email = null,
     Object? isActive = null,
-    Object? password = freezed,
     Object? phoneNumber = freezed,
     Object? imageUrl = freezed,
     Object? categories = freezed,
@@ -93,10 +90,6 @@ class _$UserDTOCopyWithImpl<$Res, $Val extends UserDTO>
           ? _value.isActive
           : isActive // ignore: cast_nullable_to_non_nullable
               as bool,
-      password: freezed == password
-          ? _value.password
-          : password // ignore: cast_nullable_to_non_nullable
-              as String?,
       phoneNumber: freezed == phoneNumber
           ? _value.phoneNumber
           : phoneNumber // ignore: cast_nullable_to_non_nullable
@@ -125,7 +118,6 @@ abstract class _$$UserDTOImplCopyWith<$Res> implements $UserDTOCopyWith<$Res> {
       String name,
       String email,
       @JsonKey(name: 'is_active') bool isActive,
-      String? password,
       @JsonKey(name: 'phone_number') String? phoneNumber,
       @JsonKey(name: 'image_url') String? imageUrl,
       List<String>? categories});
@@ -146,7 +138,6 @@ class __$$UserDTOImplCopyWithImpl<$Res>
     Object? name = null,
     Object? email = null,
     Object? isActive = null,
-    Object? password = freezed,
     Object? phoneNumber = freezed,
     Object? imageUrl = freezed,
     Object? categories = freezed,
@@ -168,10 +159,6 @@ class __$$UserDTOImplCopyWithImpl<$Res>
           ? _value.isActive
           : isActive // ignore: cast_nullable_to_non_nullable
               as bool,
-      password: freezed == password
-          ? _value.password
-          : password // ignore: cast_nullable_to_non_nullable
-              as String?,
       phoneNumber: freezed == phoneNumber
           ? _value.phoneNumber
           : phoneNumber // ignore: cast_nullable_to_non_nullable
@@ -196,7 +183,6 @@ class _$UserDTOImpl implements _UserDTO {
       required this.name,
       required this.email,
       @JsonKey(name: 'is_active') required this.isActive,
-      this.password,
       @JsonKey(name: 'phone_number') this.phoneNumber,
       @JsonKey(name: 'image_url') this.imageUrl,
       required final List<String>? categories})
@@ -216,8 +202,6 @@ class _$UserDTOImpl implements _UserDTO {
   @JsonKey(name: 'is_active')
   final bool isActive;
   @override
-  final String? password;
-  @override
   @JsonKey(name: 'phone_number')
   final String? phoneNumber;
   @override
@@ -235,7 +219,7 @@ class _$UserDTOImpl implements _UserDTO {
 
   @override
   String toString() {
-    return 'UserDTO(userId: $userId, name: $name, email: $email, isActive: $isActive, password: $password, phoneNumber: $phoneNumber, imageUrl: $imageUrl, categories: $categories)';
+    return 'UserDTO(userId: $userId, name: $name, email: $email, isActive: $isActive, phoneNumber: $phoneNumber, imageUrl: $imageUrl, categories: $categories)';
   }
 
   @override
@@ -248,8 +232,6 @@ class _$UserDTOImpl implements _UserDTO {
             (identical(other.email, email) || other.email == email) &&
             (identical(other.isActive, isActive) ||
                 other.isActive == isActive) &&
-            (identical(other.password, password) ||
-                other.password == password) &&
             (identical(other.phoneNumber, phoneNumber) ||
                 other.phoneNumber == phoneNumber) &&
             (identical(other.imageUrl, imageUrl) ||
@@ -260,16 +242,8 @@ class _$UserDTOImpl implements _UserDTO {
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      userId,
-      name,
-      email,
-      isActive,
-      password,
-      phoneNumber,
-      imageUrl,
-      const DeepCollectionEquality().hash(_categories));
+  int get hashCode => Object.hash(runtimeType, userId, name, email, isActive,
+      phoneNumber, imageUrl, const DeepCollectionEquality().hash(_categories));
 
   @JsonKey(ignore: true)
   @override
@@ -291,7 +265,6 @@ abstract class _UserDTO implements UserDTO {
       required final String name,
       required final String email,
       @JsonKey(name: 'is_active') required final bool isActive,
-      final String? password,
       @JsonKey(name: 'phone_number') final String? phoneNumber,
       @JsonKey(name: 'image_url') final String? imageUrl,
       required final List<String>? categories}) = _$UserDTOImpl;
@@ -308,8 +281,6 @@ abstract class _UserDTO implements UserDTO {
   @override
   @JsonKey(name: 'is_active')
   bool get isActive;
-  @override
-  String? get password;
   @override
   @JsonKey(name: 'phone_number')
   String? get phoneNumber;

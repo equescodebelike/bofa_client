@@ -58,7 +58,7 @@ class BasketCard extends StatelessWidget {
         overflow: TextOverflow.ellipsis,
       ),
       subtitle: Text(
-        '\$${product.cost.toStringAsFixed(2)}',
+        '${product.cost.toStringAsFixed(2)} ₽',
         style: theme.textTheme.bodyMedium?.copyWith(
           color: theme.colorScheme.onBackground,
         ),
