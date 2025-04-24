@@ -11,7 +11,6 @@ class UserDTO with _$UserDTO {
     required String name,
     required String email,
     @JsonKey(name: 'is_active') required bool isActive,
-    String? password,
     @JsonKey(name: 'phone_number') String? phoneNumber,
     @JsonKey(name: 'image_url') String? imageUrl,
     required List<String>? categories,

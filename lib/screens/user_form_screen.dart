@@ -1,3 +1,4 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../bloc/user_list/user_list_barrel.dart';
@@ -22,7 +23,6 @@ class _UserFormScreenState extends State<UserFormScreen> {
   
   late final TextEditingController _nameController;
   late final TextEditingController _emailController;
-  late final TextEditingController _passwordController;
   late final TextEditingController _phoneNumberController;
   late final TextEditingController _imageUrlController;
   // Removed _isActive field but keeping it in the model
@@ -44,9 +44,6 @@ class _UserFormScreenState extends State<UserFormScreen> {
     _emailController = TextEditingController(
       text: widget.isEditing ? widget.user!.email : '',
     );
-    _passwordController = TextEditingController(
-      text: widget.isEditing ? widget.user!.password : '',
-    );
     _phoneNumberController = TextEditingController(
       text: widget.isEditing ? widget.user!.phoneNumber : '',
     );
@@ -64,7 +61,6 @@ class _UserFormScreenState extends State<UserFormScreen> {
   void dispose() {
     _nameController.dispose();
     _emailController.dispose();
-    _passwordController.dispose();
     _phoneNumberController.dispose();
     _imageUrlController.dispose();
     super.dispose();
@@ -166,21 +162,6 @@ class _UserFormScreenState extends State<UserFormScreen> {
             ),
             const SizedBox(height: 16),
             TextFormField(
-              controller: _passwordController,
-              decoration: const InputDecoration(
-                labelText: 'Password (optional)',
-                border: OutlineInputBorder(),
-              ),
-              obscureText: true,
-              validator: (value) {
-                if (value != null && value.isNotEmpty && value.length < 6) {
-                  return 'Password must be at least 6 characters';
-                }
-                return null;
-              },
-            ),
-            const SizedBox(height: 16),
-            TextFormField(
               controller: _phoneNumberController,
               decoration: const InputDecoration(
                 labelText: 'Phone Number',
@@ -256,7 +237,6 @@ class _UserFormScreenState extends State<UserFormScreen> {
         userId: widget.isEditing ? widget.user!.userId : null,
         name: _nameController.text,
         email: _emailController.text,
-        password: _passwordController.text.isEmpty ? null : _passwordController.text,
         phoneNumber: _phoneNumberController.text.isEmpty ? null : _phoneNumberController.text,
         isActive: widget.isEditing ? widget.user!.isActive : true, // Default to true for new users
         imageUrl: _imageUrlController.text.isEmpty

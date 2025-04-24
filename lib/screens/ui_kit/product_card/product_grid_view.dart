@@ -36,7 +36,7 @@ class ProductGridView extends StatelessWidget {
           physics: const NeverScrollableScrollPhysics(),
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 2,
-            childAspectRatio: 0.75,
+            childAspectRatio: 0.65,
             crossAxisSpacing: 16,
             mainAxisSpacing: 16,
           ),
@@ -47,7 +47,10 @@ class ProductGridView extends StatelessWidget {
               product: product,
               onTap: () {
                 // Navigate to product detail screen
-                context.router.push(ProductDetailRoute(productId: product.productId!));
+                context.router.push(ProductDetailRoute(
+                  productId: product.productId!,
+                  productName: product.name,
+                ));
               },
             );
           },

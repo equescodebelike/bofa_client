@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import '../data/service/favorites_service.dart';
 import '../bloc/product_detail/product_detail_barrel.dart';
 import '../bloc/auth/auth_barrel.dart';
 import '../bloc/cart/cart_barrel.dart';
@@ -16,10 +16,12 @@ import 'product_form_screen.dart';
 @RoutePage()
 class ProductDetailScreen extends StatelessWidget {
   final int productId;
+  final String productName;
 
   const ProductDetailScreen({
     super.key,
     required this.productId,
+    required this.productName,
   });
 
   @override
@@ -27,44 +29,53 @@ class ProductDetailScreen extends StatelessWidget {
     // Fetch the product details when the screen is built
     context.read<ProductDetailBloc>().add(FetchProductDetail(productId));
 
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          'Product Details',
-          style: AppTypography.personalCardTitle,
-        ),
-        centerTitle: true,
-        leading: IconButton(
-          padding: EdgeInsets.zero,
-          visualDensity: VisualDensity.comfortable,
-          onPressed: () => Navigator.of(context).pop(),
-          icon: const Icon(
-            Icons.arrow_back_ios,
-            color: AppColor.black,
+    return BlocListener<CartBloc, CartState>(
+      listener: (context, state) {
+        // if (state is CartAuthRequired) {
+        //   // Navigate to auth screen when authentication is required
+        //   context.router.pushNamed('/auth/email');
+          
+        // } 
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(
+            productName,
+            style: AppTypography.personalCardTitle,
+          ),
+          centerTitle: true,
+          leading: IconButton(
+            padding: EdgeInsets.zero,
+            visualDensity: VisualDensity.comfortable,
+            onPressed: () => Navigator.of(context).pop(),
+            icon: const Icon(
+              Icons.arrow_back_ios,
+              color: AppColor.black,
+            ),
           ),
         ),
-      ),
-      body: BlocBuilder<ProductDetailBloc, ProductDetailState>(
-        builder: (context, state) {
-          if (state is ProductDetailLoading) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          } else if (state is ProductDetailLoaded) {
-            return _buildProductDetails(context, state.product);
-          } else if (state is ProductDetailError) {
-            return Center(
-              child: Text(
-                'Error: ${state.message}',
-                style: const TextStyle(color: Colors.red),
-              ),
-            );
-          } else {
-            return const Center(
-              child: Text('Product not found'),
-            );
-          }
-        },
+        body: BlocBuilder<ProductDetailBloc, ProductDetailState>(
+          builder: (context, state) {
+            if (state is ProductDetailLoading) {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            } else if (state is ProductDetailLoaded) {
+              return _buildProductDetails(context, state.product);
+            } else if (state is ProductDetailError) {
+              return Center(
+                child: Text(
+                  'Error: ${state.message}',
+                  style: const TextStyle(color: Colors.red),
+                ),
+              );
+            } else {
+              return const Center(
+                child: Text('Product not found'),
+              );
+            }
+          },
+        ),
       ),
     );
   }
@@ -72,16 +83,13 @@ class ProductDetailScreen extends StatelessWidget {
   Widget _buildProductDetails(BuildContext context, ProductDTO product) {
     // Get current user from AuthBloc
     final authState = context.watch<AuthBloc>().state;
-    final bool isOwner = authState is AuthSuccess && 
-                         authState.user != null && 
-                         authState.user!.userId == product.userId;
-    
+    final bool isOwner = authState is AuthSuccess && authState.user != null && authState.user!.userId == product.userId;
+
     // Check if product is in cart
     final cartState = context.watch<CartBloc>().state;
-    final bool isInCart = cartState is CartLoaded && 
-                         cartState.cart.items.any((item) => 
-                           item.productId == product.productId);
-    
+    final bool isInCart =
+        cartState is CartLoaded && cartState.cart.items.any((item) => item.productId == product.productId);
+
     return SafeArea(
       minimum: const EdgeInsets.only(left: 24, right: 24),
       child: Column(
@@ -108,65 +116,56 @@ class ProductDetailScreen extends StatelessWidget {
               ),
             ],
           ),
-          
+
           // Product name and cost
           Padding(
-            padding: const EdgeInsets.only(top: 50),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  product.name,
-                  style: AppTypography.personalCardTitle,
-                ),
-                const Spacer(),
-                Text(
-                  '\$${product.cost.toStringAsFixed(2)} / ${product.units}',
-                  style: AppTypography.personalCardTitle,
-                ),
-              ],
+            padding: const EdgeInsets.only(
+              top: 50,
+            ),
+            child: Text(
+              product.name,
+              style: AppTypography.personalCardTitle,
+              textAlign: TextAlign.center,
             ),
           ),
-          
-          // Product description (using email field as description)
-          Padding(
-            padding: const EdgeInsets.only(left: 16, top: 24),
-            child: Text(product.email),
+          Text(
+            '${product.cost.toStringAsFixed(2)} ₽ / ${product.units}',
+            style: AppTypography.personalCardTitle,
           ),
-          
+
           // Spacer to push buttons to bottom
           const Spacer(),
-          
+
           // Action buttons
           Padding(
             padding: const EdgeInsets.only(bottom: 16),
             child: Row(
               children: [
-                // Favorite button (simplified implementation)
-                FutureBuilder<SharedPreferences>(
-                  future: SharedPreferences.getInstance(),
+                // Favorite button
+                FutureBuilder<bool>(
+                  future: FavoritesService().isFavorite(product.productId!),
                   builder: (context, snapshot) {
-                    bool isFavorite = false;
-                    if (snapshot.hasData) {
-                      final prefs = snapshot.data!;
-                      isFavorite = (prefs.getStringList('favorites') ?? [])
-                          .contains(product.productId.toString());
-                    }
+                    bool isFavorite = snapshot.data ?? false;
                     
                     return GestureDetector(
                       onTap: () async {
-                        if (snapshot.hasData) {
-                          final prefs = snapshot.data!;
-                          List<String> favorites = prefs.getStringList('favorites') ?? [];
-                          if (isFavorite) {
-                            favorites.remove(product.productId.toString());
-                          } else {
-                            favorites.add(product.productId.toString());
-                          }
-                          await prefs.setStringList('favorites', favorites);
-                          // Force rebuild to update UI
-                          context.read<ProductDetailBloc>().add(FetchProductDetail(productId));
-                        }
+                        final favoritesService = FavoritesService();
+                        final newState = await favoritesService.toggleFavorite(product.productId!);
+                        
+                        // Force rebuild to update UI
+                        context.read<ProductDetailBloc>().add(FetchProductDetail(productId));
+                        
+                        // Show feedback to user
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(
+                              newState 
+                                ? 'Добавлено в избранное' 
+                                : 'Удалено из избранного'
+                            ),
+                            duration: const Duration(seconds: 1),
+                          ),
+                        );
                       },
                       child: Icon(
                         Icons.favorite,
@@ -176,9 +175,9 @@ class ProductDetailScreen extends StatelessWidget {
                     );
                   },
                 ),
-                
+
                 const SizedBox(width: 20),
-                
+
                 // Show Edit/Delete buttons only if user is the owner
                 if (isOwner) ...[
                   // Edit button
@@ -202,9 +201,9 @@ class ProductDetailScreen extends StatelessWidget {
                       },
                     ),
                   ),
-                  
+
                   const SizedBox(width: 10),
-                  
+
                   // Delete button
                   SizedBox(
                     width: 130,
@@ -218,31 +217,31 @@ class ProductDetailScreen extends StatelessWidget {
                     ),
                   ),
                 ],
-                
+
                 // Show Add to Cart button only if user is NOT the owner
                 if (!isOwner)
                   SizedBox(
                     width: 270,
                     child: CustomFilledButton(
-                      text: isInCart ? 'In Cart' : 'Add to Cart',
+                      text: isInCart ? 'В корзине' : 'Добавить в корзину',
                       onTap: () {
                         if (!isInCart) {
-                          // Add to cart with default size of 1
+                          // // Add to cart with default size of 1
                           context.read<CartBloc>().add(AddToCart(product.productId!, 1));
-                          
-                          // Show success message
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text('${product.name} added to cart'),
-                              duration: const Duration(seconds: 2),
-                              action: SnackBarAction(
-                                label: 'View Cart',
-                                onPressed: () {
-                                  context.router.navigate(const CartTab());
-                                },
-                              ),
-                            ),
-                          );
+
+                          // // Show success message
+                          // ScaffoldMessenger.of(context).showSnackBar(
+                          //   SnackBar(
+                          //     content: Text('${product.name} доба'),
+                          //     duration: const Duration(seconds: 2),
+                          //     action: SnackBarAction(
+                          //       label: 'View Cart',
+                          //       onPressed: () {
+                          //         context.router.navigate(const CartTab());
+                          //       },
+                          //     ),
+                          //   ),
+                          // );
                         } else {
                           // Navigate to cart screen if product is already in cart
                           context.router.navigate(const CartTab());

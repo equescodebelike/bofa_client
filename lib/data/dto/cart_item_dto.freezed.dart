@@ -26,8 +26,8 @@ mixin _$CartItemDto {
   int get size => throw _privateConstructorUsedError;
   @JsonKey(name: 'orderPartId')
   int get orderPartId => throw _privateConstructorUsedError;
-  @JsonKey(name: 'status')
-  String get status => throw _privateConstructorUsedError;
+  @JsonKey(name: 'status', defaultValue: 'pending')
+  String? get status => throw _privateConstructorUsedError;
   @JsonKey(name: 'updatedAt')
   String get updatedAt => throw _privateConstructorUsedError;
   @JsonKey(name: 'orderedAt')
@@ -49,7 +49,7 @@ abstract class $CartItemDtoCopyWith<$Res> {
       {@JsonKey(name: 'productId') int productId,
       @JsonKey(name: 'size') int size,
       @JsonKey(name: 'orderPartId') int orderPartId,
-      @JsonKey(name: 'status') String status,
+      @JsonKey(name: 'status', defaultValue: 'pending') String? status,
       @JsonKey(name: 'updatedAt') String updatedAt,
       @JsonKey(name: 'orderedAt') String orderedAt});
 }
@@ -70,7 +70,7 @@ class _$CartItemDtoCopyWithImpl<$Res, $Val extends CartItemDto>
     Object? productId = null,
     Object? size = null,
     Object? orderPartId = null,
-    Object? status = null,
+    Object? status = freezed,
     Object? updatedAt = null,
     Object? orderedAt = null,
   }) {
@@ -87,10 +87,10 @@ class _$CartItemDtoCopyWithImpl<$Res, $Val extends CartItemDto>
           ? _value.orderPartId
           : orderPartId // ignore: cast_nullable_to_non_nullable
               as int,
-      status: null == status
+      status: freezed == status
           ? _value.status
           : status // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
       updatedAt: null == updatedAt
           ? _value.updatedAt
           : updatedAt // ignore: cast_nullable_to_non_nullable
@@ -115,7 +115,7 @@ abstract class _$$CartItemDtoImplCopyWith<$Res>
       {@JsonKey(name: 'productId') int productId,
       @JsonKey(name: 'size') int size,
       @JsonKey(name: 'orderPartId') int orderPartId,
-      @JsonKey(name: 'status') String status,
+      @JsonKey(name: 'status', defaultValue: 'pending') String? status,
       @JsonKey(name: 'updatedAt') String updatedAt,
       @JsonKey(name: 'orderedAt') String orderedAt});
 }
@@ -134,7 +134,7 @@ class __$$CartItemDtoImplCopyWithImpl<$Res>
     Object? productId = null,
     Object? size = null,
     Object? orderPartId = null,
-    Object? status = null,
+    Object? status = freezed,
     Object? updatedAt = null,
     Object? orderedAt = null,
   }) {
@@ -151,10 +151,10 @@ class __$$CartItemDtoImplCopyWithImpl<$Res>
           ? _value.orderPartId
           : orderPartId // ignore: cast_nullable_to_non_nullable
               as int,
-      status: null == status
+      status: freezed == status
           ? _value.status
           : status // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
       updatedAt: null == updatedAt
           ? _value.updatedAt
           : updatedAt // ignore: cast_nullable_to_non_nullable
@@ -174,7 +174,7 @@ class _$CartItemDtoImpl implements _CartItemDto {
       {@JsonKey(name: 'productId') required this.productId,
       @JsonKey(name: 'size') required this.size,
       @JsonKey(name: 'orderPartId') required this.orderPartId,
-      @JsonKey(name: 'status') required this.status,
+      @JsonKey(name: 'status', defaultValue: 'pending') this.status,
       @JsonKey(name: 'updatedAt') required this.updatedAt,
       @JsonKey(name: 'orderedAt') required this.orderedAt});
 
@@ -191,8 +191,8 @@ class _$CartItemDtoImpl implements _CartItemDto {
   @JsonKey(name: 'orderPartId')
   final int orderPartId;
   @override
-  @JsonKey(name: 'status')
-  final String status;
+  @JsonKey(name: 'status', defaultValue: 'pending')
+  final String? status;
   @override
   @JsonKey(name: 'updatedAt')
   final String updatedAt;
@@ -243,13 +243,13 @@ class _$CartItemDtoImpl implements _CartItemDto {
 
 abstract class _CartItemDto implements CartItemDto {
   const factory _CartItemDto(
-          {@JsonKey(name: 'productId') required final int productId,
-          @JsonKey(name: 'size') required final int size,
-          @JsonKey(name: 'orderPartId') required final int orderPartId,
-          @JsonKey(name: 'status') required final String status,
-          @JsonKey(name: 'updatedAt') required final String updatedAt,
-          @JsonKey(name: 'orderedAt') required final String orderedAt}) =
-      _$CartItemDtoImpl;
+      {@JsonKey(name: 'productId') required final int productId,
+      @JsonKey(name: 'size') required final int size,
+      @JsonKey(name: 'orderPartId') required final int orderPartId,
+      @JsonKey(name: 'status', defaultValue: 'pending') final String? status,
+      @JsonKey(name: 'updatedAt') required final String updatedAt,
+      @JsonKey(name: 'orderedAt')
+      required final String orderedAt}) = _$CartItemDtoImpl;
 
   factory _CartItemDto.fromJson(Map<String, dynamic> json) =
       _$CartItemDtoImpl.fromJson;
@@ -264,8 +264,8 @@ abstract class _CartItemDto implements CartItemDto {
   @JsonKey(name: 'orderPartId')
   int get orderPartId;
   @override
-  @JsonKey(name: 'status')
-  String get status;
+  @JsonKey(name: 'status', defaultValue: 'pending')
+  String? get status;
   @override
   @JsonKey(name: 'updatedAt')
   String get updatedAt;

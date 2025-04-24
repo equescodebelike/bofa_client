@@ -59,7 +59,7 @@ class ProductGridItem extends StatelessWidget {
           ),
           const SizedBox(height: 4),
           Text(
-            '${product.cost} / ${product.units}',
+            '${product.cost}0 ₽',
             style: AppTypography.personalCardTitle.copyWith(fontSize: 14),
           ),
         ],

@@ -10,7 +10,7 @@ class CartItemDto with _$CartItemDto {
     @JsonKey(name: 'productId') required int productId,
     @JsonKey(name: 'size') required int size,
     @JsonKey(name: 'orderPartId') required int orderPartId,
-    @JsonKey(name: 'status') required String status,
+    @JsonKey(name: 'status', defaultValue: 'pending') String? status,
     @JsonKey(name: 'updatedAt') required String updatedAt,
     @JsonKey(name: 'orderedAt') required String orderedAt,
   }) = _CartItemDto;
