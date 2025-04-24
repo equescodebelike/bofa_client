@@ -1,4 +1,4 @@
-package com.example.bofa_client
+package com.movelife.bofa_client
 
 import io.flutter.embedding.android.FlutterActivity
 
