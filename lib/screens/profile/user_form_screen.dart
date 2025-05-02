@@ -1,9 +1,8 @@
-import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../bloc/user_list/user_list_barrel.dart';
-import '../bloc/user_detail/user_detail_barrel.dart';
-import '../data/dto/user_dto.dart';
+import '../../bloc/user_list/user_list_barrel.dart';
+import '../../bloc/user_detail/user_detail_barrel.dart';
+import '../../data/dto/user_dto.dart';
 
 class UserFormScreen extends StatefulWidget {
   final UserDTO? user;

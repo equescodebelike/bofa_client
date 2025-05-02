@@ -4,17 +4,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import '../bloc/user_detail/user_detail_barrel.dart';
-import '../data/dto/user_dto.dart';
-import '../data/dto/product_dto.dart';
-import '../data/service/product_service.dart';
-import '../data/repository/product_repository.dart';
-import '../theme/app_typography.dart';
-import '../theme/color_const.dart';
-import '../screens/ui_kit/custom_filled_button.dart';
-import '../screens/ui_kit/product_card/categories_list.dart';
-import '../screens/ui_kit/product_card/product_grid_view.dart';
-import 'user_form_screen.dart';
+import '../../bloc/user_detail/user_detail_barrel.dart';
+import '../../data/dto/user_dto.dart';
+import '../../data/service/product_service.dart';
+import '../../data/repository/product_repository.dart';
+import '../../theme/app_typography.dart';
+import '../../theme/color_const.dart';
+import '../ui_kit/product_card/categories_list.dart';
+import '../ui_kit/product_card/product_grid_view.dart';
 
 @RoutePage()
 class UserDetailScreen extends StatefulWidget {
@@ -35,8 +32,9 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
   @override
   void initState() {
     super.initState();
-        context.read<UserDetailBloc>().add(FetchUserDetail(widget.userId));
+    context.read<UserDetailBloc>().add(FetchUserDetail(widget.userId));
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -136,39 +134,6 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
                                 },
                               ),
                             ),
-                            // Add a badge in the top right corner
-                            // Positioned(
-                            //   right: 10,
-                            //   top: 8,
-                            //   child: Container(
-                            //     decoration: BoxDecoration(
-                            //       borderRadius: BorderRadius.circular(5),
-                            //       color: AppColor.green,
-                            //     ),
-                            //     height: 24,
-                            //     width: 67,
-                            //     child: Row(
-                            //       mainAxisAlignment: MainAxisAlignment.center,
-                            //       children: [
-                            //         Text(
-                            //           user.categories?.length.toString() ?? 'null',
-                            //           style: const TextStyle(
-                            //             fontSize: 16,
-                            //             color: AppColor.white,
-                            //             fontWeight: FontWeight.w600,
-                            //           ),
-                            //         ),
-                            //         const SizedBox(width: 4),
-                            //         SvgPicture.asset(
-                            //           'assets/svg/info.svg',
-                            //           height: 18,
-                            //           width: 18,
-                            //           color: AppColor.white,
-                            //         ),
-                            //       ],
-                            //     ),
-                            //   ),
-                            // )
                           ],
                         ),
                       ),
@@ -216,7 +181,7 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
                     )
                   ],
                 ),
-                
+
                 // Rating and reviews
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
@@ -233,10 +198,10 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
                     ],
                   ),
                 ),
-                
+
                 // Categories
                 CategoriesList(list: user.categories ?? []),
-                
+
                 // User's Products
                 Padding(
                   padding: const EdgeInsets.only(top: 24),
@@ -255,7 +220,6 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
                           child: Text('No products found for this user'),
                         );
                       } else {
-                        
                         // Display products grouped by category
                         return Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -274,21 +238,21 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
                               padding: const EdgeInsets.symmetric(horizontal: 16),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
-                                children: snapshot.data!.products != null 
-                                  ? snapshot.data!.products!.entries.map((entry) {
-                                      final category = entry.key;
-                                      final productsList = entry.value;
-                                      
-                                      if (productsList == null) {
-                                        return const SizedBox.shrink();
-                                      }
-                                      
-                                      return ProductGridView(
-                                        products: productsList,
-                                        category: category,
-                                      );
-                                    }).toList()
-                                  : [const Text('No products available')],
+                                children: snapshot.data!.products != null
+                                    ? snapshot.data!.products!.entries.map((entry) {
+                                        final category = entry.key;
+                                        final productsList = entry.value;
+
+                                        if (productsList == null) {
+                                          return const SizedBox.shrink();
+                                        }
+
+                                        return ProductGridView(
+                                          products: productsList,
+                                          category: category,
+                                        );
+                                      }).toList()
+                                    : [const Text('No products available')],
                               ),
                             ),
                           ],
@@ -297,28 +261,6 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
                     },
                   ),
                 ),
-                
-                // // Action button
-                // Padding(
-                //   padding: const EdgeInsets.only(top: 24, bottom: 16),
-                //   child: CustomFilledButton(
-                //     text: 'Edit User',
-                //     onTap: () {
-                //       // Navigate to edit user screen
-                //       Navigator.push(
-                //         context,
-                //         MaterialPageRoute(
-                //           builder: (context) => UserFormScreen(
-                //             user: user,
-                //           ),
-                //         ),
-                //       ).then((_) {
-                //         // Refresh user details when returning from form
-                //         context.read<UserDetailBloc>().add(FetchUserDetail(user.userId!));
-                //       });
-                //     },
-                //   ),
-                // ),
               ],
             ),
           ),

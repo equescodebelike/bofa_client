@@ -25,17 +25,13 @@ import 'bloc/product_detail/product_detail_barrel.dart';
 import 'bloc/cart/cart_barrel.dart';
 import 'bloc/auth/auth_barrel.dart';
 import 'bloc/app_bloc_observer.dart';
-import 'screens/product_list_screen.dart';
-import 'screens/user_list_screen.dart';
 
 void main() async {
   // Ensure Flutter binding is initialized
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Set up BLoC observer for debugging
-  Bloc.observer = AppBlocObserver();
+  // Bloc.observer = AppBlocObserver();
 
-  // Create auth repository first (without JWT interceptor)
   final Dio dio = Dio();
   final ApiClient apiClient = ApiClient(dio);
   final authRepository = AuthRepositoryImpl(apiClient);

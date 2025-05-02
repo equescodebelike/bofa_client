@@ -19,7 +19,6 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     on<UpdateCartItemSize>(_onUpdateCartItemSize);
     on<ClearCart>(_onClearCart);
     on<SyncCartWithUser>(_onSyncCartWithUser);
-    on<SaveCartBeforeLogout>(_onSaveCartBeforeLogout);
     
     // Listen to auth state changes
     _authSubscription = _authBloc.stream.listen((state) {
@@ -140,20 +139,10 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     emit(const CartSynchronizing());
     try {
       // Sync cart with user
-      final cart = await _cartService.syncCartWithUser(event.userId);
+      final cart = await _cartService.getCart();
       emit(CartLoaded(cart));
     } catch (e) {
       emit(CartError(e.toString()));
     }
-  }
-  
-  Future<void> _onSaveCartBeforeLogout(
-    SaveCartBeforeLogout event,
-    Emitter<CartState> emit,
-  ) async {
-    // This method is no longer needed as we're handling logout by syncing with null user ID
-    // and fetching a fresh cart from the server
-    // We keep it for backward compatibility
-    emit(const CartSynchronizing());
   }
 }

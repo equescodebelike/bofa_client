@@ -25,10 +25,4 @@ class CartService {
   Future<void> updateCartItemSize(int productId, int size) {
     return _repository.updateCartItemSize(productId, size);
   }
-  
-  // Set current user and sync cart
-  Future<CartDto> syncCartWithUser(int? userId) {
-    _repository.setCurrentUser(userId);
-    return _repository.syncCartWithUser(userId);
-  }
 }

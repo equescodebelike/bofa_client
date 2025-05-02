@@ -41,7 +41,6 @@ class AuthRepositoryImpl implements AuthRepository {
     
     // Update cache
     _cachedAccessToken = response.accessToken;
-    _cachedRefreshToken = response.refreshToken;
     _cachedAuthStatus = true;
     
     return response;
@@ -76,7 +75,6 @@ class AuthRepositoryImpl implements AuthRepository {
     
     // Update cache
     _cachedAccessToken = newAccessToken;
-    _cachedRefreshToken = newRefreshToken;
     _cachedAuthStatus = true;
     
     return newAccessToken;
@@ -90,7 +88,6 @@ class AuthRepositoryImpl implements AuthRepository {
     
     // Update cache
     _cachedAccessToken = null;
-    _cachedRefreshToken = null;
     _cachedAuthStatus = false;
   }
 
@@ -114,7 +111,6 @@ class AuthRepositoryImpl implements AuthRepository {
 
   // Cache for tokens to avoid frequent SharedPreferences access
   String? _cachedAccessToken;
-  String? _cachedRefreshToken;
   bool? _cachedAuthStatus;
 
   @override
@@ -137,7 +133,6 @@ class AuthRepositoryImpl implements AuthRepository {
   Future<void> initTokens() async {
     final prefs = await SharedPreferences.getInstance();
     _cachedAccessToken = prefs.getString(_accessTokenKey);
-    _cachedRefreshToken = prefs.getString(_refreshTokenKey);
     _cachedAuthStatus = _cachedAccessToken != null;
     return;
   }

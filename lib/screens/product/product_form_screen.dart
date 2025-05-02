@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../bloc/product_list/product_list_barrel.dart';
-import '../bloc/product_detail/product_detail_barrel.dart';
-import '../data/dto/product_dto.dart';
+import '../../bloc/product_list/product_list_barrel.dart';
+import '../../bloc/product_detail/product_detail_barrel.dart';
+import '../../data/dto/product_dto.dart';
 
 class ProductFormScreen extends StatefulWidget {
   final ProductDTO? product;

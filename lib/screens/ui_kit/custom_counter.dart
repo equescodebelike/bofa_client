@@ -30,15 +30,15 @@ class _CustomCounterState extends State<CustomCounter> {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Container(
+        SizedBox(
           width: 234,
           child: Text(
             widget.title,
             textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 16),
+            style: const TextStyle(fontSize: 16),
           ),
         ),
-        Spacer(),
+        const Spacer(),
         SizedBox(
           width: 87,
           child: Row(

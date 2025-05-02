@@ -1,4 +1,3 @@
-import 'package:auto_route/auto_route.dart';
 import 'package:bofa_client/theme/app_typography.dart';
 import 'package:bofa_client/theme/color_const.dart';
 import 'package:flutter/material.dart';

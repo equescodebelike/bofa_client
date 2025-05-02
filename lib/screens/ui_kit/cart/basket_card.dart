@@ -4,7 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../bloc/cart/cart_barrel.dart';
 import '../../../data/dto/cart_item_dto.dart';
 import '../../../data/dto/product_dto.dart';
-import '../../../data/repository/product_repository.dart';
 import '../../../theme/color_const.dart';
 
 class BasketCard extends StatelessWidget {
@@ -23,7 +22,7 @@ class BasketCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final size = cartItem.size;
-    final minSize = 1; // Minimum size
+    const minSize = 1; // Minimum size
     final maxSize = 100; // Maximum size (can be adjusted)
 
     return ListTile(

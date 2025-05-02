@@ -18,9 +18,9 @@ class Comment extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(bottom: 16),
+      padding: const EdgeInsets.only(bottom: 16),
       child: Container(
-        padding: EdgeInsets.only(
+        padding: const EdgeInsets.only(
           left: 16,
           top: 16,
           right: 16,
@@ -28,7 +28,7 @@ class Comment extends StatelessWidget {
         width: 349,
         height: 176,
         decoration: BoxDecoration(
-          color: Color(0xFFF7FFF9),
+          color: const Color(0xFFF7FFF9),
           border: Border.all(
             color: AppColor.grey,
           ),
@@ -40,18 +40,18 @@ class Comment extends StatelessWidget {
             Row(
               children: [
                 Text(name),
-                Spacer(),
+                const Spacer(),
                 SvgPicture.asset('assets/svg/star.svg'),
-                SizedBox(
+                const SizedBox(
                   width: 5,
                 ),
                 Text(rating),
               ],
             ),
             ConstrainedBox(
-              constraints: BoxConstraints(maxHeight: 293),
+              constraints: const BoxConstraints(maxHeight: 293),
               child: Padding(
-                padding: EdgeInsets.only(top: 16),
+                padding: const EdgeInsets.only(top: 16),
                 child: Text(
                   text,
                   style: AppTypography.personalCardTitle,

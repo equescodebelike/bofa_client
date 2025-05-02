@@ -1,6 +1,5 @@
 import 'package:bofa_client/data/dto/user_list_dto.dart';
 import 'package:equatable/equatable.dart';
-import '../../data/dto/user_dto.dart';
 
 abstract class UserListState extends Equatable {
   const UserListState();

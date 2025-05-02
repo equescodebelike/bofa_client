@@ -17,7 +17,6 @@ class CustomFilledButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final color = Theme.of(context).colorScheme.background;
     return SizedBox(
       height: 50,
       width: 360,

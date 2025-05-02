@@ -5,7 +5,6 @@ import 'package:bofa_client/bloc/auth/auth_state.dart';
 import 'package:bofa_client/bloc/user/user_bloc.dart';
 import 'package:bofa_client/bloc/user/user_event.dart';
 import 'package:bofa_client/data/dto/user_dto.dart';
-import 'package:bofa_client/data/service/api_client.dart';
 import 'package:bofa_client/screens/ui_kit/auth/custom_textfield.dart';
 import 'package:bofa_client/screens/ui_kit/custom_filled_button.dart';
 import 'package:bofa_client/theme/app_typography.dart';
@@ -89,7 +88,7 @@ class _UserDataScreenState extends State<UserDataScreen> {
       context.read<UserBloc>().add(UpdateUser(user!.userId!, updatedUser));
 
       // Обновление данных в AuthBloc
-      context.read<AuthBloc>().add(GetUserData());
+      context.read<AuthBloc>().add(const GetUserData());
 
       // Показать сообщение об успешном сохранении
       ScaffoldMessenger.of(context).showSnackBar(
@@ -127,7 +126,7 @@ class _UserDataScreenState extends State<UserDataScreen> {
               context.read<UserBloc>().add(UpdateUser(user!.userId!, updatedUser));
 
               // Обновление данных в AuthBloc
-              context.read<AuthBloc>().add(GetUserData());
+              context.read<AuthBloc>().add(const GetUserData());
             } catch (e) {
               // Показать сообщение об ошибке
               ScaffoldMessenger.of(context).showSnackBar(

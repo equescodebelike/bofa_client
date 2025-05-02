@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../bloc/product_list/product_list_barrel.dart';
-import '../data/dto/product_dto.dart';
+import '../../bloc/product_list/product_list_barrel.dart';
+import '../../data/dto/product_dto.dart';
 import 'product_detail_screen.dart';
 import 'product_form_screen.dart';
 

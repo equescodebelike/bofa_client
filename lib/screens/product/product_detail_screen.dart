@@ -2,15 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import '../data/service/favorites_service.dart';
-import '../bloc/product_detail/product_detail_barrel.dart';
-import '../bloc/auth/auth_barrel.dart';
-import '../bloc/cart/cart_barrel.dart';
-import '../data/dto/product_dto.dart';
-import '../theme/app_typography.dart';
-import '../theme/color_const.dart';
-import '../screens/ui_kit/custom_filled_button.dart';
-import '../navigation/app_router.dart';
+import '../../data/service/favorites_service.dart';
+import '../../bloc/product_detail/product_detail_barrel.dart';
+import '../../bloc/auth/auth_barrel.dart';
+import '../../bloc/cart/cart_barrel.dart';
+import '../../data/dto/product_dto.dart';
+import '../../theme/app_typography.dart';
+import '../../theme/color_const.dart';
+import '../ui_kit/custom_filled_button.dart';
+import '../../navigation/app_router.dart';
 import 'product_form_screen.dart';
 
 @RoutePage()

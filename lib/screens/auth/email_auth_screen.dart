@@ -2,7 +2,6 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:bofa_client/bloc/auth/auth_barrel.dart';
-import 'package:bofa_client/data/service/auth_service.dart';
 
 @RoutePage()
 class EmailAuthScreen extends StatefulWidget {

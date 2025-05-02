@@ -1,11 +1,11 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../data/dto/product_dto.dart';
-import '../data/repository/product_repository.dart';
-import '../data/service/favorites_service.dart';
-import '../theme/app_typography.dart';
-import 'ui_kit/product_card/product_grid_view.dart';
+import '../../data/dto/product_dto.dart';
+import '../../data/repository/product_repository.dart';
+import '../../data/service/favorites_service.dart';
+import '../../theme/app_typography.dart';
+import '../ui_kit/product_card/product_grid_view.dart';
 
 @RoutePage()
 class FavoritesScreen extends StatefulWidget {
@@ -59,21 +59,21 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
               );
             } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
               return Center(
-                child: Column(
+                child: const Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Icon(
+                    Icon(
                       Icons.favorite_border,
                       size: 64,
                       color: Colors.grey,
                     ),
-                    const SizedBox(height: 16),
+                    SizedBox(height: 16),
                     Text(
                       'В избранном пока ничего нет',
                       style: AppTypography.personalCardTitle,
                     ),
-                    const SizedBox(height: 8),
-                    const Text(
+                    SizedBox(height: 8),
+                    Text(
                       'Добавляйте товары в избранное, чтобы они отображались здесь',
                       textAlign: TextAlign.center,
                     ),

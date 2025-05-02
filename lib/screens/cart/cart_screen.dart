@@ -4,14 +4,13 @@ import 'package:auto_route/auto_route.dart';
 import 'package:bofa_client/navigation/app_router.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../bloc/cart/cart_barrel.dart';
-import '../data/dto/cart_dto.dart';
-import '../data/dto/product_dto.dart';
-import '../data/repository/product_repository.dart';
-import '../theme/app_typography.dart';
-import '../theme/color_const.dart';
-import 'ui_kit/cart/basket_card.dart';
-import 'ui_kit/custom_filled_button.dart';
+import '../../bloc/cart/cart_barrel.dart';
+import '../../data/dto/cart_dto.dart';
+import '../../data/dto/product_dto.dart';
+import '../../data/repository/product_repository.dart';
+import '../../theme/app_typography.dart';
+import '../ui_kit/cart/basket_card.dart';
+import '../ui_kit/custom_filled_button.dart';
 
 @RoutePage()
 class CartScreen extends StatefulWidget {
@@ -90,7 +89,7 @@ class _CartScreenState extends State<CartScreen> {
 
   Widget _buildCartContent(BuildContext context, CartDto cart) {
     if (cart.items.isEmpty) {
-      return Center(
+      return const Center(
         child: Text(
           'Здесь пока пусто :(',
           style: AppTypography.personalCardTitle,
@@ -120,7 +119,7 @@ class _CartScreenState extends State<CartScreen> {
                       title: Text('Error loading product: ${snapshot.error}'),
                     );
                   } else if (!snapshot.hasData) {
-                    return ListTile(
+                    return const ListTile(
                       title: Text('Product not found'),
                     );
                   }

@@ -38,7 +38,7 @@ class ProfileCardsAuthorized extends StatelessWidget {
       children: [
         GestureDetector(
           onTap: () {
-            context.router.push(UserDataRoute());
+            context.router.push(const UserDataRoute());
           },
           child: SizedBox(
             height: 45,
@@ -87,7 +87,7 @@ class ProfileCardsAuthorized extends StatelessWidget {
         // ),
         GestureDetector(
           onTap: () {
-            context.router.push(FavoritesRoute());
+            context.router.push(const FavoritesRoute());
           },
           child: SizedBox(
             height: 45,
@@ -249,7 +249,7 @@ class ProfileCardsUnauthorized extends StatelessWidget {
         // ),
         GestureDetector(
           onTap: () {
-            context.router.push(FavoritesRoute());
+            context.router.push(const FavoritesRoute());
           },
           child: SizedBox(
             height: 45,

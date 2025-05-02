@@ -19,9 +19,9 @@ class SearchWidget extends StatelessWidget {
       autofocus: autoFocus,
       decoration: InputDecoration(
         hintText: 'Поиск',
-        prefixIcon: Icon(Icons.search),
+        prefixIcon: const Icon(Icons.search),
         suffixIcon: IconButton(
-          icon: Icon(Icons.clear),
+          icon: const Icon(Icons.clear),
           onPressed: () {
             onChanged?.call('');
           },

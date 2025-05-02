@@ -80,9 +80,9 @@ class _OrderScreenState extends State<OrderScreen> {
                   ),
                   TextFormField(
                     controller: nameController,
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       hintText: 'Имя Фамилия',
-                      contentPadding: const EdgeInsets.symmetric(
+                      contentPadding: EdgeInsets.symmetric(
                         vertical: 16,
                         horizontal: 16,
                       ),
@@ -104,9 +104,9 @@ class _OrderScreenState extends State<OrderScreen> {
                   ),
                   TextFormField(
                     controller: phoneController,
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       hintText: 'Телефон',
-                      contentPadding: const EdgeInsets.symmetric(
+                      contentPadding: EdgeInsets.symmetric(
                         vertical: 16,
                         horizontal: 16,
                       ),
@@ -131,11 +131,11 @@ class _OrderScreenState extends State<OrderScreen> {
                   ),
                   TextFormField(
                     controller: emailController,
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       hintText: 'E-mail',
                       filled: true,
                       fillColor: Color(0xFFF0F0F0),
-                      contentPadding: const EdgeInsets.symmetric(
+                      contentPadding: EdgeInsets.symmetric(
                         vertical: 16,
                         horizontal: 16,
                       ),
@@ -165,11 +165,11 @@ class _OrderScreenState extends State<OrderScreen> {
                   ),
                   TextFormField(
                     controller: addressController,
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       filled: true,
                       fillColor: Color(0xFFF0F0F0),
                       hintText: 'г. Воронеж, ул. Мира, д. 5',
-                      contentPadding: const EdgeInsets.symmetric(
+                      contentPadding: EdgeInsets.symmetric(
                         vertical: 16,
                         horizontal: 16,
                       ),
@@ -252,7 +252,7 @@ class _OrderScreenState extends State<OrderScreen> {
                       RichText(
                         text: TextSpan(
                           text: '${widget.sum} ₽',
-                          style: TextStyle(
+                          style: const TextStyle(
                             color: AppColor.black,
                           ),
                         ),
@@ -277,7 +277,7 @@ class _OrderScreenState extends State<OrderScreen> {
                       RichText(
                         text: TextSpan(
                           text: '${Decimal.parse((double.parse(widget.sum) * 105.00 / 100.00).toString())} ₽',
-                          style: TextStyle(
+                          style: const TextStyle(
                             color: AppColor.black,
                           ),
                         ),

@@ -2,13 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import '../bloc/user_list/user_list_barrel.dart';
-import '../data/dto/user_dto.dart';
-import '../theme/app_typography.dart';
-import '../theme/base_const.dart';
-import '../theme/color_const.dart';
+import '../../bloc/user_list/user_list_barrel.dart';
+import '../../data/dto/user_dto.dart';
+import '../../theme/app_typography.dart';
+import '../../theme/color_const.dart';
 import 'user_detail_screen.dart';
-import 'user_form_screen.dart';
 
 @RoutePage()
 class UserListScreen extends StatefulWidget {
@@ -86,41 +84,11 @@ class _UserListScreenState extends State<UserListScreen> {
           ),
         ),
       ),
-      // floatingActionButton: Column(
-      //   mainAxisAlignment: MainAxisAlignment.end,
-      //   children: [
-      //     FloatingActionButton(
-      //       onPressed: () {
-      //         // Navigate to create user screen
-      //         Navigator.push(
-      //           context,
-      //           MaterialPageRoute(
-      //             builder: (context) => const UserFormScreen(),
-      //           ),
-      //         ).then((_) {
-      //           // Refresh users when returning from form
-      //           context.read<UserListBloc>().add(const FetchUserList());
-      //         });
-      //       },
-      //       heroTag: 'createUser',
-      //       child: const Icon(Icons.add),
-      //     ),
-      //     const SizedBox(height: 16),
-      //     FloatingActionButton(
-      //       onPressed: () {
-      //         // Refresh users
-      //         context.read<UserListBloc>().add(const FetchUserList());
-      //       },
-      //       heroTag: 'refreshUsers',
-      //       child: const Icon(Icons.refresh),
-      //     ),
-      //   ],
-      // ),
     );
   }
 
   Widget _buildSearchWidget() {
-    return TextField(
+    return const TextField(
       enabled: false,
       decoration: InputDecoration(
         hintText: 'Поиск',
