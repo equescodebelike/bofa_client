@@ -47,7 +47,3 @@ class CartError extends CartState {
 class CartAuthRequired extends CartState {
   const CartAuthRequired();
 }
-
-class CartSynchronizing extends CartState {
-  const CartSynchronizing();
-}

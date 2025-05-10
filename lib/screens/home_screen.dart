@@ -18,10 +18,6 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    // AppMetrica.reportEvent('app_launch');
-    
-    // Fetch cart when the screen is initialized
-    context.read<CartBloc>().add(const FetchCart());
   }
 
   // Helper method to build cart counter widget
