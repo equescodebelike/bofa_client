@@ -25,8 +25,6 @@ class _CartScreenState extends State<CartScreen> {
   @override
   void initState() {
     super.initState();
-    // Fetch cart when the screen is initialized
-    context.read<CartBloc>().add(const FetchCart());
     cartSub = context.read<CartBloc>().stream.listen((data) {
       if (data is CartAuthRequired) {
         context.router.pushNamed('/auth/email');
@@ -54,17 +52,6 @@ class _CartScreenState extends State<CartScreen> {
           if (state is CartLoading) {
             return const Center(
               child: CircularProgressIndicator(),
-            );
-          } else if (state is CartSynchronizing) {
-            return const Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  CircularProgressIndicator(),
-                  SizedBox(height: 16),
-                  Text('Синхронизация корзины...'),
-                ],
-              ),
             );
           } else if (state is CartLoaded) {
             return _buildCartContent(context, state.cart);

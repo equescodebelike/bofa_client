@@ -3,6 +3,7 @@ import 'package:bofa_client/navigation/app_router.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:bofa_client/bloc/auth/auth_barrel.dart';
+import 'dart:async';
 
 @RoutePage()
 class AuthCodeScreen extends StatefulWidget {
@@ -20,10 +21,35 @@ class AuthCodeScreen extends StatefulWidget {
 class _AuthCodeScreenState extends State<AuthCodeScreen> {
   final _formKey = GlobalKey<FormState>();
   final _codeController = TextEditingController();
+  int _resendCooldown = 0;
+  Timer? _cooldownTimer;
+
+  @override
+  void initState() {
+    super.initState();
+    _startCooldown();
+  }
+
+  void _startCooldown() {
+    setState(() {
+      _resendCooldown = 60;
+    });
+    _cooldownTimer?.cancel();
+    _cooldownTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      setState(() {
+        if (_resendCooldown > 0) {
+          _resendCooldown--;
+        } else {
+          timer.cancel();
+        }
+      });
+    });
+  }
 
   @override
   void dispose() {
     _codeController.dispose();
+    _cooldownTimer?.cancel();
     super.dispose();
   }
 
@@ -108,16 +134,19 @@ class _AuthCodeScreenState extends State<AuthCodeScreen> {
                   ),
                   const SizedBox(height: 16),
                   TextButton(
-                    onPressed: state is AuthLoading
+                    onPressed: (state is AuthLoading || _resendCooldown > 0)
                         ? null
                         : () {
                             if (widget.email != null) {
                               context.read<AuthBloc>().add(
                                     RequestEmailVerification(widget.email!),
                                   );
+                              _startCooldown();
                             }
                           },
-                    child: const Text('Отправить код повторно'),
+                    child: Text(_resendCooldown > 0 
+                      ? 'Отправить код повторно (${_resendCooldown}с)' 
+                      : 'Отправить код повторно'),
                   ),
                 ],
               ),

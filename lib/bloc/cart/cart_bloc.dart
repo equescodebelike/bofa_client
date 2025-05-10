@@ -18,20 +18,15 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     on<RemoveFromCart>(_onRemoveFromCart);
     on<UpdateCartItemSize>(_onUpdateCartItemSize);
     on<ClearCart>(_onClearCart);
-    on<SyncCartWithUser>(_onSyncCartWithUser);
-    
+
     // Listen to auth state changes
     _authSubscription = _authBloc.stream.listen((state) {
-      if (state is AuthSuccess) {
-        // User logged in, sync cart with user ID
-        add(SyncCartWithUser(state.user?.userId));
-      } else if (state is AuthLoggedOut) {
-        // User logged out, sync cart with null user ID (guest)
-        add(const SyncCartWithUser(null));
+      if (state is AuthSuccess || state is AuthLoggedOut) {
+        add(const FetchCart());
       }
     });
   }
-  
+
   @override
   Future<void> close() {
     _authSubscription.cancel();
@@ -59,7 +54,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
       emit(const CartAuthRequired());
       return;
     }
-    
+
     try {
       await _cartService.addToCart(event.productId, event.size);
       // Fetch updated cart
@@ -79,7 +74,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
       emit(const CartAuthRequired());
       return;
     }
-    
+
     emit(const CartLoading());
     try {
       await _cartService.removeFromCart(event.productId);
@@ -100,7 +95,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
       emit(const CartAuthRequired());
       return;
     }
-    
+
     emit(const CartLoading());
     try {
       await _cartService.updateCartItemSize(event.productId, event.size);
@@ -121,24 +116,10 @@ class CartBloc extends Bloc<CartEvent, CartState> {
       emit(const CartAuthRequired());
       return;
     }
-    
+
     emit(const CartLoading());
     try {
       // For now, we don't have a clear cart endpoint, so we'll just fetch an empty cart
-      final cart = await _cartService.getCart();
-      emit(CartLoaded(cart));
-    } catch (e) {
-      emit(CartError(e.toString()));
-    }
-  }
-  
-  Future<void> _onSyncCartWithUser(
-    SyncCartWithUser event,
-    Emitter<CartState> emit,
-  ) async {
-    emit(const CartSynchronizing());
-    try {
-      // Sync cart with user
       final cart = await _cartService.getCart();
       emit(CartLoaded(cart));
     } catch (e) {

@@ -43,16 +43,3 @@ class UpdateCartItemSize extends CartEvent {
 class ClearCart extends CartEvent {
   const ClearCart();
 }
-
-class SyncCartWithUser extends CartEvent {
-  final int? userId;
-  
-  const SyncCartWithUser(this.userId);
-  
-  @override
-  List<Object?> get props => [userId];
-}
-
-class SaveCartBeforeLogout extends CartEvent {
-  const SaveCartBeforeLogout();
-}

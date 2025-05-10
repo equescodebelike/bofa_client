@@ -33,8 +33,8 @@ void main() async {
   // Bloc.observer = AppBlocObserver();
 
   final Dio dio = Dio();
-  final ApiClient apiClient = ApiClient(dio);
-  final authRepository = AuthRepositoryImpl(apiClient);
+  final authRepository = AuthRepositoryImpl(ApiClient(dio));
+  final apiClient = createApiClient(dio, authRepository);
 
   // Initialize repositories with the same API client instance
   final productRepository = ProductRepositoryImpl(apiClient);
@@ -112,30 +112,25 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final client = createApiClient(
-      dio,
-      authRepository,
-    );
-
     return MultiRepositoryProvider(
       providers: [
         RepositoryProvider<AuthRepository>.value(
           value: authRepository,
         ),
         RepositoryProvider<ProductRepository>(
-          create: (context) => ProductRepositoryImpl(client),
+          create: (context) => ProductRepositoryImpl(apiClient),
         ),
         RepositoryProvider<UserRepository>(
-          create: (context) => UserRepositoryImpl(client),
+          create: (context) => UserRepositoryImpl(apiClient),
         ),
         RepositoryProvider<OrderRepository>(
-          create: (context) => OrderRepositoryImpl(client),
+          create: (context) => OrderRepositoryImpl(apiClient),
         ),
         RepositoryProvider<OrderPartRepository>(
-          create: (context) => OrderPartRepositoryImpl(client),
+          create: (context) => OrderPartRepositoryImpl(apiClient),
         ),
         RepositoryProvider<CartRepository>(
-          create: (context) => CartRepository(client),
+          create: (context) => CartRepository(apiClient),
         ),
       ],
       child: MultiBlocProvider(
