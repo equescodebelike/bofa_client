@@ -29,7 +29,7 @@ class CategoriesList extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Container(
-                      width: e.length >= 8 ? 104 : 84,
+                      width: e.length >= 8 ? 134 : 84,
                       height: 35,
                       clipBehavior: Clip.hardEdge,
                       decoration: BoxDecoration(

@@ -30,94 +30,136 @@ class _UserListScreenState extends State<UserListScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Магазины'),
-      ),
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(8),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              // Search widget (non-functional but styled like the showcase)
-              GestureDetector(
-                onTap: () {
-                  // Could implement search functionality in the future
-                },
-                child: _buildSearchWidget(),
-              ),
-              // Sort dropdown
-              Padding(
-                padding: const EdgeInsets.only(left: 12),
-                child: Align(
-                  alignment: Alignment.topLeft,
-                  child: _buildSortDropdown(),
-                ),
-              ),
-              const SizedBox(height: 15),
-              // User list with BlocBuilder
-              Expanded(
-                child: BlocBuilder<UserListBloc, UserListState>(
-                  builder: (context, state) {
-                    if (state is UserListLoading) {
-                      return const Center(
-                        child: CircularProgressIndicator(),
-                      );
-                    } else if (state is UserListLoaded) {
-                      return _buildUserCategories(state.users.users);
-                    } else if (state is UserListError) {
-                      return Center(
-                        child: Text(
-                          'Error: ${state.message}',
-                          style: const TextStyle(color: Colors.red),
+        child: CustomScrollView(
+          slivers: [
+            SliverAppBar(
+              title: const Text('Магазины'),
+              bottom: PreferredSize(
+                preferredSize: const Size.fromHeight(120),
+                child: Container(
+                  color: Theme.of(context).scaffoldBackgroundColor,
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: _buildSearchWidget(),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 12, bottom: 8),
+                        child: Align(
+                          alignment: Alignment.centerLeft,
+                          child: _buildSortDropdown(),
                         ),
-                      );
-                    } else {
-                      return const Center(
-                        child: CircularProgressIndicator(),
-                      );
-                    }
-                  },
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ],
-          ),
+            ),
+            SliverToBoxAdapter(
+              child: BlocBuilder<UserListBloc, UserListState>(
+                builder: (context, state) {
+                  if (state is UserListLoading) {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  } else if (state is UserListLoaded) {
+                    return _buildUserCategories(state.users.users);
+                  } else if (state is UserListError) {
+                    return Center(
+                      child: Text(
+                        'Error: ${state.message}',
+                        style: const TextStyle(color: Colors.red),
+                      ),
+                    );
+                  } else {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+                },
+              ),
+            ),
+          ],
         ),
       ),
     );
   }
 
   Widget _buildSearchWidget() {
-    return const TextField(
-      enabled: false,
-      decoration: InputDecoration(
-        hintText: 'Поиск',
-        prefixIcon: Icon(Icons.search),
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 10,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: const TextField(
+        enabled: false,
+        decoration: InputDecoration(
+          hintText: 'Поиск',
+          prefixIcon: Icon(Icons.search),
+          border: InputBorder.none,
+          contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        ),
       ),
     );
   }
 
   Widget _buildSortDropdown() {
-    return DropdownButton<String>(
-      value: _sortOption,
-      icon: const Icon(Icons.keyboard_arrow_down_rounded),
-      elevation: 16,
-      style: const TextStyle(color: Colors.black),
-      onChanged: (String? newValue) {
-        if (newValue != null) {
-          setState(() {
-            _sortOption = newValue;
-            // Here you could add sorting logic based on the selected option
-          });
-        }
-      },
-      items: _sortOptions.map<DropdownMenuItem<String>>((String value) {
-        return DropdownMenuItem<String>(
-          value: value,
-          child: Text(value),
-        );
-      }).toList(),
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(8),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 10,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: DropdownButton<String>(
+        value: _sortOption,
+        icon: const Icon(Icons.keyboard_arrow_down_rounded),
+        elevation: 16,
+        style: const TextStyle(color: Colors.black),
+        underline: const SizedBox(),
+        onChanged: (String? newValue) {
+          if (newValue != null) {
+            setState(() {
+              _sortOption = newValue;
+            });
+          }
+        },
+        items: _sortOptions.map<DropdownMenuItem<String>>((String value) {
+          return DropdownMenuItem<String>(
+            value: value,
+            child: Text(value),
+          );
+        }).toList(),
+      ),
     );
+  }
+
+  List<UserDTO> _sortUsers(List<UserDTO> users) {
+    final sortedUsers = List<UserDTO>.from(users);
+    switch (_sortOption) {
+      case 'A-Z':
+        sortedUsers.sort((a, b) => a.name.compareTo(b.name));
+        break;
+      case 'Z-A':
+        sortedUsers.sort((a, b) => b.name.compareTo(a.name));
+        break;
+    }
+    return sortedUsers;
   }
 
   Widget _buildUserCategories(List<UserDTO> users) {
@@ -127,7 +169,44 @@ class _UserListScreenState extends State<UserListScreen> {
       );
     }
 
-    return _buildUserList(users, 'Все пользователи');
+    // Group users by categories
+    Map<String, List<UserDTO>> categorizedUsers = {};
+
+    // Add users to their respective categories
+    for (var user in users) {
+      if (user.categories != null && user.categories!.isNotEmpty) {
+        for (var category in user.categories!) {
+          if (!categorizedUsers.containsKey(category)) {
+            categorizedUsers[category] = [];
+          }
+          categorizedUsers[category]!.add(user);
+        }
+      } else {
+        // Handle users without categories
+        if (!categorizedUsers.containsKey('Все пользователи')) {
+          categorizedUsers['Все пользователи'] = [];
+        }
+        categorizedUsers['Все пользователи']!.add(user);
+      }
+    }
+
+    // Sort users in each category
+    categorizedUsers = Map.fromEntries(
+      categorizedUsers.entries.map(
+        (entry) => MapEntry(entry.key, _sortUsers(entry.value)),
+      ),
+    );
+
+    // Create a list of widgets for each category
+    return ListView.builder(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      itemCount: categorizedUsers.length,
+      itemBuilder: (context, index) {
+        final entry = categorizedUsers.entries.elementAt(index);
+        return _buildUserList(entry.value, entry.key);
+      },
+    );
   }
 
   Widget _buildUserList(List<UserDTO> users, String category) {
@@ -135,19 +214,24 @@ class _UserListScreenState extends State<UserListScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: const EdgeInsets.only(left: 8),
+          padding: const EdgeInsets.fromLTRB(16, 8, 16, 12),
           child: Text(
             category,
-            style: AppTypography.label.copyWith(fontSize: 16),
+            style: AppTypography.label.copyWith(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
           ),
         ),
         SizedBox(
-          height: 200,
-          child: ListView(
+          height: 220,
+          child: ListView.builder(
             scrollDirection: Axis.horizontal,
-            children: users.map((user) {
+            padding: const EdgeInsets.symmetric(horizontal: 8),
+            itemCount: users.length,
+            itemBuilder: (context, index) {
               return Padding(
-                padding: const EdgeInsets.all(8),
+                padding: const EdgeInsets.symmetric(horizontal: 8),
                 child: GestureDetector(
                   onTap: () {
                     // Navigate to user details screen
@@ -155,16 +239,16 @@ class _UserListScreenState extends State<UserListScreen> {
                       context,
                       MaterialPageRoute(
                         builder: (context) => UserDetailScreen(
-                          userId: user.userId!,
-                          userName: user.name,
+                          userId: users[index].userId!,
+                          userName: users[index].name,
                         ),
                       ),
                     );
                   },
-                  child: _buildUserCard(user),
+                  child: _buildUserCard(users[index]),
                 ),
               );
-            }).toList(),
+            },
           ),
         ),
       ],
@@ -172,93 +256,79 @@ class _UserListScreenState extends State<UserListScreen> {
   }
 
   Widget _buildUserCard(UserDTO user) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        // User image container
-        Container(
-          width: 200,
-          height: 120,
-          clipBehavior: Clip.hardEdge,
-          decoration: BoxDecoration(
-            boxShadow: [
-              BoxShadow(
-                color: AppColor.black.withOpacity(0.08),
-                offset: const Offset(0, 4),
-                blurRadius: 12,
-                spreadRadius: 0,
-              )
-            ],
-            borderRadius: BorderRadius.circular(15),
-            color: Colors.white,
-          ),
-          child: Stack(
-            children: [
-              // User image
-              Positioned.fill(
-                child: user.imageUrl != null && user.imageUrl!.isNotEmpty
-                    ? CachedNetworkImage(
-                        fit: BoxFit.cover,
-                        imageUrl: user.imageUrl!,
-                        progressIndicatorBuilder: (_, __, ___) {
-                          return const Center(
-                            child: CircularProgressIndicator(),
-                          );
-                        },
-                        errorWidget: (_, __, ___) {
-                          return Image.asset(
-                            'assets/image/empty_photo.png',
-                            fit: BoxFit.cover,
-                          );
-                        },
-                      )
-                    : Container(
-                        color: Colors.grey[200],
-                        child: const Icon(
-                          Icons.person,
-                          size: 50,
-                          color: Colors.grey,
-                        ),
+    return Container(
+      width: 200,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(15),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.08),
+            offset: const Offset(0, 4),
+            blurRadius: 12,
+            spreadRadius: 0,
+          )
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          ClipRRect(
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(15)),
+            child: SizedBox(
+              height: 120,
+              width: double.infinity,
+              child: user.imageUrl != null && user.imageUrl!.isNotEmpty
+                  ? CachedNetworkImage(
+                      fit: BoxFit.cover,
+                      imageUrl: user.imageUrl!,
+                      progressIndicatorBuilder: (_, __, ___) {
+                        return const Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      },
+                      errorWidget: (_, __, ___) {
+                        return Image.asset(
+                          'assets/image/empty_photo.png',
+                          fit: BoxFit.cover,
+                        );
+                      },
+                    )
+                  : Container(
+                      color: Colors.grey[200],
+                      child: const Icon(
+                        Icons.person,
+                        size: 50,
+                        color: Colors.grey,
                       ),
-              ),
-            ],
+                    ),
+            ),
           ),
-        ),
-        // User info
-        SizedBox(
-          width: 200,
-          child: Padding(
-            padding: const EdgeInsets.only(top: 8),
-            child: Row(
+          Padding(
+            padding: const EdgeInsets.all(12),
+            child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // User name
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        user.name,
-                        style: AppTypography.personalCardTitle,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      Text(
-                        user.email,
-                        style: AppTypography.label,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ],
-                  ),
+                Text(
+                  user.name,
+                  style: AppTypography.personalCardTitle,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
-                // Empty space where status indicator was
-                const SizedBox(width: 8),
+                const SizedBox(height: 4),
+                Text(
+                  user.email,
+                  style: AppTypography.label.copyWith(
+                    color: Colors.grey[600],
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
               ],
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
