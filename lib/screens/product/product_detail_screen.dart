@@ -29,53 +29,44 @@ class ProductDetailScreen extends StatelessWidget {
     // Fetch the product details when the screen is built
     context.read<ProductDetailBloc>().add(FetchProductDetail(productId));
 
-    return BlocListener<CartBloc, CartState>(
-      listener: (context, state) {
-        // if (state is CartAuthRequired) {
-        //   // Navigate to auth screen when authentication is required
-        //   context.router.pushNamed('/auth/email');
-          
-        // } 
-      },
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text(
-            productName,
-            style: AppTypography.personalCardTitle,
-          ),
-          centerTitle: true,
-          leading: IconButton(
-            padding: EdgeInsets.zero,
-            visualDensity: VisualDensity.comfortable,
-            onPressed: () => Navigator.of(context).pop(),
-            icon: const Icon(
-              Icons.arrow_back_ios,
-              color: AppColor.black,
-            ),
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          productName,
+          style: AppTypography.personalCardTitle,
+        ),
+        centerTitle: true,
+        leading: IconButton(
+          padding: EdgeInsets.zero,
+          visualDensity: VisualDensity.comfortable,
+          onPressed: () => Navigator.of(context).pop(),
+          icon: const Icon(
+            Icons.arrow_back_ios,
+            color: AppColor.black,
           ),
         ),
-        body: BlocBuilder<ProductDetailBloc, ProductDetailState>(
-          builder: (context, state) {
-            if (state is ProductDetailLoading) {
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
-            } else if (state is ProductDetailLoaded) {
-              return _buildProductDetails(context, state.product);
-            } else if (state is ProductDetailError) {
-              return Center(
-                child: Text(
-                  'Error: ${state.message}',
-                  style: const TextStyle(color: Colors.red),
-                ),
-              );
-            } else {
-              return const Center(
-                child: Text('Product not found'),
-              );
-            }
-          },
-        ),
+      ),
+      body: BlocBuilder<ProductDetailBloc, ProductDetailState>(
+        builder: (context, state) {
+          if (state is ProductDetailLoading) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          } else if (state is ProductDetailLoaded) {
+            return _buildProductDetails(context, state.product);
+          } else if (state is ProductDetailError) {
+            return Center(
+              child: Text(
+                'Error: ${state.message}',
+                style: const TextStyle(color: Colors.red),
+              ),
+            );
+          } else {
+            return const Center(
+              child: Text('Product not found'),
+            );
+          }
+        },
       ),
     );
   }
@@ -102,7 +93,7 @@ class ProductDetailScreen extends StatelessWidget {
                 height: 273,
                 width: 273,
                 imageUrl: product.imageUrl ?? '',
-                fit: BoxFit.cover,
+                fit: BoxFit.contain,
                 progressIndicatorBuilder: (_, __, ___) {
                   return const Center(
                     child: CircularProgressIndicator(),
@@ -146,23 +137,19 @@ class ProductDetailScreen extends StatelessWidget {
                   future: FavoritesService().isFavorite(product.productId!),
                   builder: (context, snapshot) {
                     bool isFavorite = snapshot.data ?? false;
-                    
+
                     return GestureDetector(
                       onTap: () async {
                         final favoritesService = FavoritesService();
                         final newState = await favoritesService.toggleFavorite(product.productId!);
-                        
+
                         // Force rebuild to update UI
                         context.read<ProductDetailBloc>().add(FetchProductDetail(productId));
-                        
+
                         // Show feedback to user
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
-                            content: Text(
-                              newState 
-                                ? 'Добавлено в избранное' 
-                                : 'Удалено из избранного'
-                            ),
+                            content: Text(newState ? 'Добавлено в избранное' : 'Удалено из избранного'),
                             duration: const Duration(seconds: 1),
                           ),
                         );
@@ -220,35 +207,42 @@ class ProductDetailScreen extends StatelessWidget {
 
                 // Show Add to Cart button only if user is NOT the owner
                 if (!isOwner)
-                  SizedBox(
-                    width: 270,
-                    child: CustomFilledButton(
-                      text: isInCart ? 'В корзине' : 'Добавить в корзину',
-                      onTap: () {
-                        if (!isInCart) {
-                          // // Add to cart with default size of 1
-                          context.read<CartBloc>().add(AddToCart(product.productId!, 1));
+                  BlocBuilder(
+                      bloc: context.read<AuthBloc>(),
+                      builder: (context, isAuth) {
+                        return SizedBox(
+                          width: 270,
+                          child: CustomFilledButton(
+                            text: isInCart ? 'В корзине' : 'Добавить в корзину',
+                            onTap: () {
+                              if (!isInCart) {
+                                if (isAuth is AuthLoggedOut) {
+                                  context.router.navigate(const EmailAuthRoute());
+                                }
+                                // // Add to cart with default size of 1
+                                context.read<CartBloc>().add(AddToCart(product.productId!, 1));
 
-                          // // Show success message
-                          // ScaffoldMessenger.of(context).showSnackBar(
-                          //   SnackBar(
-                          //     content: Text('${product.name} доба'),
-                          //     duration: const Duration(seconds: 2),
-                          //     action: SnackBarAction(
-                          //       label: 'View Cart',
-                          //       onPressed: () {
-                          //         context.router.navigate(const CartTab());
-                          //       },
-                          //     ),
-                          //   ),
-                          // );
-                        } else {
-                          // Navigate to cart screen if product is already in cart
-                          context.router.navigate(const CartTab());
-                        }
-                      },
-                    ),
-                  ),
+                                // // Show success message
+                                // ScaffoldMessenger.of(context).showSnackBar(
+                                //   SnackBar(
+                                //     content: Text('${product.name} доба'),
+                                //     duration: const Duration(seconds: 2),
+                                //     action: SnackBarAction(
+                                //       label: 'View Cart',
+                                //       onPressed: () {
+                                //         context.router.navigate(const CartTab());
+                                //       },
+                                //     ),
+                                //   ),
+                                // );
+                              } else {
+                                // Navigate to cart screen if product is already in cart
+                                context.router.navigate(const CartTab());
+                              }
+                            },
+                          ),
+                        );
+                      }),
               ],
             ),
           ),

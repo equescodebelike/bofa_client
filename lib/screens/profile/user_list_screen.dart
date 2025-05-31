@@ -224,7 +224,7 @@ class _UserListScreenState extends State<UserListScreen> {
           ),
         ),
         SizedBox(
-          height: 220,
+          height: 190,
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
             padding: const EdgeInsets.symmetric(horizontal: 8),

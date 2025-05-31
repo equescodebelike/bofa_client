@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:bofa_client/data/dto/product_list_dto.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -12,6 +14,7 @@ import '../../theme/app_typography.dart';
 import '../../theme/color_const.dart';
 import '../ui_kit/product_card/categories_list.dart';
 import '../ui_kit/product_card/product_grid_view.dart';
+import '../../bloc/auth/auth_barrel.dart';
 
 @RoutePage()
 class UserDetailScreen extends StatefulWidget {
@@ -164,17 +167,75 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
                               ],
                             ),
                             const SizedBox(height: 8),
-                            if (user.phoneNumber != null)
-                              Row(
-                                children: [
-                                  const Icon(Icons.phone, color: Colors.grey, size: 16),
-                                  const SizedBox(width: 4),
-                                  Text(
-                                    user.phoneNumber!,
-                                    style: AppTypography.label,
-                                  ),
-                                ],
-                              ),
+                            BlocBuilder<AuthBloc, AuthState>(
+                              bloc: context.read<AuthBloc>(),
+                              builder: (context, authState) {
+                                if (user.phoneNumber != null) {
+                                  if (authState is AuthSuccess) {
+                                    return Row(
+                                      children: [
+                                        const Icon(Icons.phone, color: Colors.grey, size: 16),
+                                        const SizedBox(width: 4),
+                                        Text(
+                                          user.phoneNumber!,
+                                          style: AppTypography.label,
+                                        ),
+                                      ],
+                                    );
+                                  } else {
+                                    return GestureDetector(
+                                      onTap: () {
+                                        showModalBottomSheet(
+                                          context: context,
+                                          builder: (BuildContext context) {
+                                            return Container(
+                                              padding: const EdgeInsets.all(16),
+                                              child: Column(
+                                                mainAxisSize: MainAxisSize.min,
+                                                children: [
+                                                  const Text(
+                                                    'Войдите, чтобы увидеть номер телефона',
+                                                    style: TextStyle(
+                                                      fontSize: 18,
+                                                      fontWeight: FontWeight.bold,
+                                                    ),
+                                                  ),
+                                                  const SizedBox(height: 16),
+                                                  SizedBox(
+                                                    width: double.infinity,
+                                                    child: ElevatedButton(
+                                                      onPressed: () {
+                                                        Navigator.pop(context);
+                                                        context.router.pushNamed('/auth/email');
+                                                      },
+                                                      child: const Text('Войти'),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            );
+                                          },
+                                        );
+                                      },
+                                      child: Row(
+                                        children: [
+                                          const Icon(Icons.phone, color: Colors.grey, size: 16),
+                                          const SizedBox(width: 4),
+                                          ImageFiltered(
+                                            imageFilter: ImageFilter.blur(sigmaX: 5.0, sigmaY: 5.0),
+                                            child: Text(
+                                              '+79064545657',
+                                              style: AppTypography.label,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  }
+                                }
+                                return const SizedBox.shrink();
+                              },
+                            ),
                           ],
                         ),
                       ),
@@ -192,7 +253,7 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
                       const Text('3.5'),
                       const Spacer(),
                       Text(
-                        '${user.categories?.length} категории',
+                        '${user.categories?.length ?? 'Пустые'} категории',
                         style: AppTypography.personalCardTitle,
                       ),
                     ],

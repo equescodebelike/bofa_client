@@ -36,6 +36,10 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
       appBar: AppBar(
         title: const Text('Избранное'),
         centerTitle: true,
+        leading: GestureDetector(
+          onTap: () => Navigator.of(context).pop(),
+          child: Icon(Icons.arrow_back_ios),
+        ),
       ),
       body: RefreshIndicator(
         onRefresh: () async {

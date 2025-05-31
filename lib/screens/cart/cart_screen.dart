@@ -25,11 +25,6 @@ class _CartScreenState extends State<CartScreen> {
   @override
   void initState() {
     super.initState();
-    cartSub = context.read<CartBloc>().stream.listen((data) {
-      if (data is CartAuthRequired) {
-        context.router.pushNamed('/auth/email');
-      }
-    });
   }
 
   @override

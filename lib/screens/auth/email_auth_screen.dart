@@ -91,6 +91,30 @@ class _EmailAuthScreenState extends State<EmailAuthScreen> {
                           : const Text('Получить код'),
                     ),
                   ),
+                  const SizedBox(height: 12),
+                  RichText(
+                    textAlign: TextAlign.center,
+                    text: TextSpan(
+                      style: const TextStyle(
+                        fontSize: 12,
+                        color: Colors.grey,
+                      ),
+                      children: [
+                        const TextSpan(
+                          text: 'Нажимая кнопку "Получить код", вы соглашаетесь с ',
+                        ),
+                        TextSpan(
+                          text: 'правилами и политикой конфиденциальности',
+                          style: const TextStyle(
+                            decoration: TextDecoration.underline,
+                          ),
+                        ),
+                        const TextSpan(
+                          text: ' сервиса',
+                        ),
+                      ],
+                    ),
+                  ),
                 ],
               ),
             ),
