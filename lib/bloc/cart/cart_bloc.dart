@@ -119,7 +119,6 @@ class CartBloc extends Bloc<CartEvent, CartState> {
 
     emit(const CartLoading());
     try {
-      // For now, we don't have a clear cart endpoint, so we'll just fetch an empty cart
       final cart = await _cartService.getCart();
       emit(CartLoaded(cart));
     } catch (e) {

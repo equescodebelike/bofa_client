@@ -1,7 +1,9 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:bofa_client/navigation/app_router.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:bofa_client/bloc/auth/auth_barrel.dart';
+import 'package:flutter/gestures.dart';
 
 @RoutePage()
 class EmailAuthScreen extends StatefulWidget {
@@ -86,9 +88,7 @@ class _EmailAuthScreenState extends State<EmailAuthScreen> {
                                     );
                               }
                             },
-                      child: state is AuthLoading
-                          ? const CircularProgressIndicator()
-                          : const Text('Получить код'),
+                      child: state is AuthLoading ? const CircularProgressIndicator() : const Text('Получить код'),
                     ),
                   ),
                   const SizedBox(height: 12),
@@ -107,7 +107,12 @@ class _EmailAuthScreenState extends State<EmailAuthScreen> {
                           text: 'правилами и политикой конфиденциальности',
                           style: const TextStyle(
                             decoration: TextDecoration.underline,
+                            color: Colors.blue,
                           ),
+                          recognizer: TapGestureRecognizer()
+                            ..onTap = () {
+                              context.router.push(const PrivacyPolicyRoute());
+                            },
                         ),
                         const TextSpan(
                           text: ' сервиса',

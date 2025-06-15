@@ -63,28 +63,33 @@ class ProfileCardsAuthorized extends StatelessWidget {
             thickness: 1.7,
           ),
         ),
-        // SizedBox(
-        //   height: 45,
-        //   child: ListTile(
-        //     title: Text(
-        //       'Заказы',
-        //       style: Theme.of(context).textTheme.titleMedium,
-        //     ),
-        //     trailing: const Icon(
-        //       Icons.arrow_forward_ios_rounded,
-        //       size: 20,
-        //     ),
-        //   ),
-        // ),
-        // const Padding(
-        //   padding: EdgeInsets.only(
-        //     left: 16,
-        //     right: 16,
-        //   ),
-        //   child: Divider(
-        //     thickness: 1.7,
-        //   ),
-        // ),
+        GestureDetector(
+          onTap: () {
+            context.router.push(const ProductManagementRoute());
+          },
+          child: SizedBox(
+            height: 45,
+            child: ListTile(
+              title: Text(
+                'Управление товарами',
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
+              trailing: const Icon(
+                Icons.arrow_forward_ios_rounded,
+                size: 20,
+              ),
+            ),
+          ),
+        ),
+        const Padding(
+          padding: EdgeInsets.only(
+            left: 16,
+            right: 16,
+          ),
+          child: Divider(
+            thickness: 1.7,
+          ),
+        ),
         GestureDetector(
           onTap: () {
             context.router.push(const FavoritesRoute());
@@ -220,33 +225,6 @@ class ProfileCardsUnauthorized extends StatelessWidget {
             thickness: 1.7,
           ),
         ),
-        // GestureDetector(
-        //   onTap: () {
-        //     context.router.pushNamed('/auth/email');
-        //   },
-        //   child: SizedBox(
-        //     height: 45,
-        //     child: ListTile(
-        //       title: Text(
-        //         'Заказы',
-        //         style: Theme.of(context).textTheme.titleMedium,
-        //       ),
-        //       trailing: const Icon(
-        //         Icons.arrow_forward_ios_rounded,
-        //         size: 20,
-        //       ),
-        //     ),
-        //   ),
-        // ),
-        // const Padding(
-        //   padding: EdgeInsets.only(
-        //     left: 16,
-        //     right: 16,
-        //   ),
-        //   child: Divider(
-        //     thickness: 1.7,
-        //   ),
-        // ),
         GestureDetector(
           onTap: () {
             context.router.push(const FavoritesRoute());

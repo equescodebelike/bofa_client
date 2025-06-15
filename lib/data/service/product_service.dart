@@ -8,27 +8,27 @@ class ProductService {
 
   ProductService(this._repository);
 
-  Future<ProductListDto> getProducts() {
-    return _repository.getProducts();
+  Future<ProductListDto> getProducts() async {
+    return await _repository.getProducts();
   }
 
-  Future<ProductDTO> getProduct(int productId) {
-    return _repository.getProduct(productId);
+  Future<ProductListDto> getProductByUserId(int userId) async {
+    return await _repository.getProductByUserId(userId);
   }
 
-  Future<void> createProduct(ProductDTO product) {
-    return _repository.createProduct(product);
+  Future<ProductDTO> getProduct(int productId) async {
+    return await _repository.getProduct(productId);
   }
 
-  Future<void> updateProduct(int productId, ProductDTO product) {
-    return _repository.updateProduct(productId, product);
+  Future<void> createProduct(ProductDTO product) async {
+    await _repository.createProduct(product);
   }
 
-  Future<void> deleteProduct(int productId) {
-    return _repository.deleteProduct(productId);
+  Future<void> updateProduct(int productId, ProductDTO product) async {
+    await _repository.updateProduct(productId, product);
   }
-  
-  Future<ProductListDto> getProductByUserId(int userId) {
-    return _repository.getProductByUserId(userId);
+
+  Future<void> deleteProduct(int productId) async {
+    await _repository.deleteProduct(productId);
   }
 }

@@ -79,6 +79,23 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    PrivacyPolicyRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const PrivacyPolicyScreen(),
+      );
+    },
+    ProductAddRoute.name: (routeData) {
+      final args = routeData.argsAs<ProductAddRouteArgs>(
+          orElse: () => const ProductAddRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: ProductAddScreen(
+          key: args.key,
+          product: args.product,
+        ),
+      );
+    },
     ProductDetailRoute.name: (routeData) {
       final args = routeData.argsAs<ProductDetailRouteArgs>();
       return AutoRoutePage<dynamic>(
@@ -88,6 +105,12 @@ abstract class _$AppRouter extends RootStackRouter {
           productId: args.productId,
           productName: args.productName,
         ),
+      );
+    },
+    ProductManagementRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const ProductManagementScreen(),
       );
     },
     ProfileRoute.name: (routeData) {
@@ -324,6 +347,58 @@ class OrderSuccessRouteArgs {
 }
 
 /// generated route for
+/// [PrivacyPolicyScreen]
+class PrivacyPolicyRoute extends PageRouteInfo<void> {
+  const PrivacyPolicyRoute({List<PageRouteInfo>? children})
+      : super(
+          PrivacyPolicyRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'PrivacyPolicyRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [ProductAddScreen]
+class ProductAddRoute extends PageRouteInfo<ProductAddRouteArgs> {
+  ProductAddRoute({
+    Key? key,
+    ProductDTO? product,
+    List<PageRouteInfo>? children,
+  }) : super(
+          ProductAddRoute.name,
+          args: ProductAddRouteArgs(
+            key: key,
+            product: product,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'ProductAddRoute';
+
+  static const PageInfo<ProductAddRouteArgs> page =
+      PageInfo<ProductAddRouteArgs>(name);
+}
+
+class ProductAddRouteArgs {
+  const ProductAddRouteArgs({
+    this.key,
+    this.product,
+  });
+
+  final Key? key;
+
+  final ProductDTO? product;
+
+  @override
+  String toString() {
+    return 'ProductAddRouteArgs{key: $key, product: $product}';
+  }
+}
+
+/// generated route for
 /// [ProductDetailScreen]
 class ProductDetailRoute extends PageRouteInfo<ProductDetailRouteArgs> {
   ProductDetailRoute({
@@ -364,6 +439,20 @@ class ProductDetailRouteArgs {
   String toString() {
     return 'ProductDetailRouteArgs{key: $key, productId: $productId, productName: $productName}';
   }
+}
+
+/// generated route for
+/// [ProductManagementScreen]
+class ProductManagementRoute extends PageRouteInfo<void> {
+  const ProductManagementRoute({List<PageRouteInfo>? children})
+      : super(
+          ProductManagementRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'ProductManagementRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
 }
 
 /// generated route for

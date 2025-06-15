@@ -1,16 +1,20 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:bofa_client/data/dto/product_dto.dart';
 import 'package:bofa_client/screens/cart/cart_screen.dart';
 import 'package:bofa_client/screens/favorites/favorites_screen.dart';
 import 'package:bofa_client/screens/home_screen.dart';
 import 'package:bofa_client/screens/order/order_screen.dart';
 import 'package:bofa_client/screens/order/order_success_screen.dart';
 import 'package:bofa_client/screens/product/product_detail_screen.dart';
+import 'package:bofa_client/screens/product/product_management_screen.dart';
 import 'package:bofa_client/screens/profile/profile_screen.dart';
 import 'package:bofa_client/screens/profile/user_data_screen.dart';
 import 'package:bofa_client/screens/profile/user_detail_screen.dart';
 import 'package:bofa_client/screens/profile/user_list_screen.dart';
 import 'package:bofa_client/screens/auth/email_auth_screen.dart';
 import 'package:bofa_client/screens/auth/auth_code_screen.dart';
+import 'package:bofa_client/screens/auth/privacy_policy_screen.dart';
+import 'package:bofa_client/screens/product/product_add_screen.dart';
 import 'package:flutter/material.dart';
 
 part 'app_router.gr.dart';
@@ -87,6 +91,14 @@ class AppRouter extends _$AppRouter {
                   page: UserDataRoute.page,
                   path: 'user-data',
                 ),
+                AutoRoute(
+                  page: ProductManagementRoute.page,
+                  path: 'product-management',
+                ),
+                AutoRoute(
+                  path: 'product-add',
+                  page: ProductAddRoute.page,
+                ),
                 // AutoRoute(
                 //   page: OrderHistoryRoute.page,
                 // ),
@@ -114,6 +126,10 @@ class AppRouter extends _$AppRouter {
         AutoRoute(
           page: AuthCodeRoute.page,
           path: '/auth/code',
+        ),
+        AutoRoute(
+          page: PrivacyPolicyRoute.page,
+          path: '/privacy-policy',
         ),
       ];
 }

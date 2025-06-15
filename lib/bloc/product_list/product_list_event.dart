@@ -12,6 +12,15 @@ class FetchProductList extends ProductListEvent {
   const FetchProductList();
 }
 
+class FetchProductListByUserId extends ProductListEvent {
+  final int userId;
+
+  const FetchProductListByUserId(this.userId);
+
+  @override
+  List<Object?> get props => [userId];
+}
+
 class DeleteProductFromList extends ProductListEvent {
   final int productId;
 

@@ -5,11 +5,11 @@ import '../service/api_client.dart';
 
 abstract class ProductRepository {
   Future<ProductListDto> getProducts();
+  Future<ProductListDto> getProductByUserId(int userId);
   Future<ProductDTO> getProduct(int productId);
   Future<void> createProduct(ProductDTO product);
   Future<void> updateProduct(int productId, ProductDTO product);
   Future<void> deleteProduct(int productId);
-  Future<ProductListDto> getProductByUserId(int userId);
 }
 
 class ProductRepositoryImpl implements ProductRepository {
@@ -18,32 +18,32 @@ class ProductRepositoryImpl implements ProductRepository {
   ProductRepositoryImpl(this._apiClient);
 
   @override
-  Future<ProductListDto> getProducts() {
-    return _apiClient.getProducts();
+  Future<ProductListDto> getProducts() async {
+    return await _apiClient.getProducts();
   }
 
   @override
-  Future<ProductDTO> getProduct(int productId) {
-    return _apiClient.getProduct(productId);
+  Future<ProductListDto> getProductByUserId(int userId) async {
+    return await _apiClient.getProductByUserId(userId);
   }
 
   @override
-  Future<void> createProduct(ProductDTO product) {
-    return _apiClient.createProduct(product);
+  Future<ProductDTO> getProduct(int productId) async {
+    return await _apiClient.getProduct(productId);
   }
 
   @override
-  Future<void> updateProduct(int productId, ProductDTO product) {
-    return _apiClient.updateProduct(productId, product);
+  Future<void> createProduct(ProductDTO product) async {
+    await _apiClient.createProduct(product);
   }
 
   @override
-  Future<void> deleteProduct(int productId) {
-    return _apiClient.deleteProduct(productId);
+  Future<void> updateProduct(int productId, ProductDTO product) async {
+    await _apiClient.updateProduct(productId, product);
   }
 
   @override
-  Future<ProductListDto> getProductByUserId(int userId) {
-    return _apiClient.getProductByUserId(userId);
+  Future<void> deleteProduct(int productId) async {
+    await _apiClient.deleteProduct(productId);
   }
 }

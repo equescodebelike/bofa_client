@@ -29,9 +29,11 @@ mixin _$ProductDTO {
   int get mnStep => throw _privateConstructorUsedError;
   double get cost => throw _privateConstructorUsedError;
   @JsonKey(name: 'user_id')
-  int get userId => throw _privateConstructorUsedError;
+  int? get userId => throw _privateConstructorUsedError;
   @JsonKey(name: 'image_url')
   String? get imageUrl => throw _privateConstructorUsedError;
+  @JsonKey(name: 'category')
+  String? get category => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -52,8 +54,9 @@ abstract class $ProductDTOCopyWith<$Res> {
       String units,
       @JsonKey(name: 'mn_step') int mnStep,
       double cost,
-      @JsonKey(name: 'user_id') int userId,
-      @JsonKey(name: 'image_url') String? imageUrl});
+      @JsonKey(name: 'user_id') int? userId,
+      @JsonKey(name: 'image_url') String? imageUrl,
+      @JsonKey(name: 'category') String? category});
 }
 
 /// @nodoc
@@ -75,8 +78,9 @@ class _$ProductDTOCopyWithImpl<$Res, $Val extends ProductDTO>
     Object? units = null,
     Object? mnStep = null,
     Object? cost = null,
-    Object? userId = null,
+    Object? userId = freezed,
     Object? imageUrl = freezed,
+    Object? category = freezed,
   }) {
     return _then(_value.copyWith(
       productId: freezed == productId
@@ -103,13 +107,17 @@ class _$ProductDTOCopyWithImpl<$Res, $Val extends ProductDTO>
           ? _value.cost
           : cost // ignore: cast_nullable_to_non_nullable
               as double,
-      userId: null == userId
+      userId: freezed == userId
           ? _value.userId
           : userId // ignore: cast_nullable_to_non_nullable
-              as int,
+              as int?,
       imageUrl: freezed == imageUrl
           ? _value.imageUrl
           : imageUrl // ignore: cast_nullable_to_non_nullable
+              as String?,
+      category: freezed == category
+          ? _value.category
+          : category // ignore: cast_nullable_to_non_nullable
               as String?,
     ) as $Val);
   }
@@ -130,8 +138,9 @@ abstract class _$$ProductDTOImplCopyWith<$Res>
       String units,
       @JsonKey(name: 'mn_step') int mnStep,
       double cost,
-      @JsonKey(name: 'user_id') int userId,
-      @JsonKey(name: 'image_url') String? imageUrl});
+      @JsonKey(name: 'user_id') int? userId,
+      @JsonKey(name: 'image_url') String? imageUrl,
+      @JsonKey(name: 'category') String? category});
 }
 
 /// @nodoc
@@ -151,8 +160,9 @@ class __$$ProductDTOImplCopyWithImpl<$Res>
     Object? units = null,
     Object? mnStep = null,
     Object? cost = null,
-    Object? userId = null,
+    Object? userId = freezed,
     Object? imageUrl = freezed,
+    Object? category = freezed,
   }) {
     return _then(_$ProductDTOImpl(
       productId: freezed == productId
@@ -179,13 +189,17 @@ class __$$ProductDTOImplCopyWithImpl<$Res>
           ? _value.cost
           : cost // ignore: cast_nullable_to_non_nullable
               as double,
-      userId: null == userId
+      userId: freezed == userId
           ? _value.userId
           : userId // ignore: cast_nullable_to_non_nullable
-              as int,
+              as int?,
       imageUrl: freezed == imageUrl
           ? _value.imageUrl
           : imageUrl // ignore: cast_nullable_to_non_nullable
+              as String?,
+      category: freezed == category
+          ? _value.category
+          : category // ignore: cast_nullable_to_non_nullable
               as String?,
     ));
   }
@@ -202,7 +216,8 @@ class _$ProductDTOImpl implements _ProductDTO {
       @JsonKey(name: 'mn_step') required this.mnStep,
       required this.cost,
       @JsonKey(name: 'user_id') required this.userId,
-      @JsonKey(name: 'image_url') this.imageUrl});
+      @JsonKey(name: 'image_url') this.imageUrl,
+      @JsonKey(name: 'category') this.category});
 
   factory _$ProductDTOImpl.fromJson(Map<String, dynamic> json) =>
       _$$ProductDTOImplFromJson(json);
@@ -223,14 +238,17 @@ class _$ProductDTOImpl implements _ProductDTO {
   final double cost;
   @override
   @JsonKey(name: 'user_id')
-  final int userId;
+  final int? userId;
   @override
   @JsonKey(name: 'image_url')
   final String? imageUrl;
+  @override
+  @JsonKey(name: 'category')
+  final String? category;
 
   @override
   String toString() {
-    return 'ProductDTO(productId: $productId, name: $name, email: $email, units: $units, mnStep: $mnStep, cost: $cost, userId: $userId, imageUrl: $imageUrl)';
+    return 'ProductDTO(productId: $productId, name: $name, email: $email, units: $units, mnStep: $mnStep, cost: $cost, userId: $userId, imageUrl: $imageUrl, category: $category)';
   }
 
   @override
@@ -247,13 +265,15 @@ class _$ProductDTOImpl implements _ProductDTO {
             (identical(other.cost, cost) || other.cost == cost) &&
             (identical(other.userId, userId) || other.userId == userId) &&
             (identical(other.imageUrl, imageUrl) ||
-                other.imageUrl == imageUrl));
+                other.imageUrl == imageUrl) &&
+            (identical(other.category, category) ||
+                other.category == category));
   }
 
   @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(runtimeType, productId, name, email, units,
-      mnStep, cost, userId, imageUrl);
+      mnStep, cost, userId, imageUrl, category);
 
   @JsonKey(ignore: true)
   @override
@@ -277,8 +297,9 @@ abstract class _ProductDTO implements ProductDTO {
       required final String units,
       @JsonKey(name: 'mn_step') required final int mnStep,
       required final double cost,
-      @JsonKey(name: 'user_id') required final int userId,
-      @JsonKey(name: 'image_url') final String? imageUrl}) = _$ProductDTOImpl;
+      @JsonKey(name: 'user_id') required final int? userId,
+      @JsonKey(name: 'image_url') final String? imageUrl,
+      @JsonKey(name: 'category') final String? category}) = _$ProductDTOImpl;
 
   factory _ProductDTO.fromJson(Map<String, dynamic> json) =
       _$ProductDTOImpl.fromJson;
@@ -299,10 +320,13 @@ abstract class _ProductDTO implements ProductDTO {
   double get cost;
   @override
   @JsonKey(name: 'user_id')
-  int get userId;
+  int? get userId;
   @override
   @JsonKey(name: 'image_url')
   String? get imageUrl;
+  @override
+  @JsonKey(name: 'category')
+  String? get category;
   @override
   @JsonKey(ignore: true)
   _$$ProductDTOImplCopyWith<_$ProductDTOImpl> get copyWith =>

@@ -13,8 +13,9 @@ class ProductDTO with _$ProductDTO {
     required String units,
     @JsonKey(name: 'mn_step') required int mnStep,
     required double cost,
-    @JsonKey(name: 'user_id') required int userId,
+    @JsonKey(name: 'user_id') required int? userId,
     @JsonKey(name: 'image_url') String? imageUrl,
+    @JsonKey(name: 'category') String? category,
   }) = _ProductDTO;
 
   factory ProductDTO.fromJson(Map<String, dynamic> json) =>

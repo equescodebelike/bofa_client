@@ -14,8 +14,9 @@ _$ProductDTOImpl _$$ProductDTOImplFromJson(Map<String, dynamic> json) =>
       units: json['units'] as String,
       mnStep: (json['mn_step'] as num).toInt(),
       cost: (json['cost'] as num).toDouble(),
-      userId: (json['user_id'] as num).toInt(),
+      userId: (json['user_id'] as num?)?.toInt(),
       imageUrl: json['image_url'] as String?,
+      category: json['category'] as String?,
     );
 
 Map<String, dynamic> _$$ProductDTOImplToJson(_$ProductDTOImpl instance) {
@@ -33,7 +34,8 @@ Map<String, dynamic> _$$ProductDTOImplToJson(_$ProductDTOImpl instance) {
   val['units'] = instance.units;
   val['mn_step'] = instance.mnStep;
   val['cost'] = instance.cost;
-  val['user_id'] = instance.userId;
+  writeNotNull('user_id', instance.userId);
   writeNotNull('image_url', instance.imageUrl);
+  writeNotNull('category', instance.category);
   return val;
 }
