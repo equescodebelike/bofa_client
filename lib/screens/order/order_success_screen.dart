@@ -4,6 +4,7 @@ import 'package:bofa_client/theme/app_typography.dart';
 import 'package:bofa_client/theme/color_const.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'dart:math';
 
 @RoutePage()
 class OrderSuccessScreen extends StatelessWidget {
@@ -16,10 +17,13 @@ class OrderSuccessScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final random = Random();
+    final randomNumber = random.nextInt(100) + 1;
+    
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Заказ №$productId',
+          'Заказ №$productId-$randomNumber',
           style: AppTypography.personalCardTitle,
         ),
         centerTitle: true,
