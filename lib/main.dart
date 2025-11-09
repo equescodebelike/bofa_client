@@ -27,84 +27,30 @@ import 'bloc/auth/auth_barrel.dart';
 import 'bloc/app_bloc_observer.dart';
 
 void main() async {
-  // Ensure Flutter binding is initialized
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Bloc.observer = AppBlocObserver();
+  Bloc.observer = AppBlocObserver();
 
   final Dio dio = Dio();
   final authRepository = AuthRepositoryImpl(ApiClient(dio));
   final apiClient = createApiClient(dio, authRepository);
 
-  // Initialize repositories with the same API client instance
-  final productRepository = ProductRepositoryImpl(apiClient);
-  final userRepository = UserRepositoryImpl(apiClient);
-  final orderRepository = OrderRepositoryImpl(apiClient);
-  final orderPartRepository = OrderPartRepositoryImpl(apiClient);
-  final cartRepository = CartRepository(apiClient);
-
-  // Initialize services
-  final productService = ProductService(productRepository);
-  final userService = UserService(userRepository);
-  final orderService = OrderService(orderRepository);
-  final orderPartService = OrderPartService(orderPartRepository);
-  final cartService = CartService(cartRepository);
-  final authService = AuthService(authRepository);
-
-  // Initialize BLoCs
-  final productListBloc = ProductListBloc(productService);
-  final productDetailBloc = ProductDetailBloc(productService);
-  final userListBloc = UserListBloc(userService);
-  final userDetailBloc = UserDetailBloc(userService);
-  final orderBloc = OrderBloc(orderService);
-  final orderPartBloc = OrderPartBloc(orderPartService);
-  final authBloc = AuthBloc(authService);
-  final cartBloc = CartBloc(cartService, authService, authBloc);
-  final userBloc = UserBloc(userService);
-
   runApp(MainApp(
-    productListBloc: productListBloc,
-    productDetailBloc: productDetailBloc,
-    userListBloc: userListBloc,
-    userDetailBloc: userDetailBloc,
-    orderBloc: orderBloc,
-    orderPartBloc: orderPartBloc,
-    cartBloc: cartBloc,
-    authBloc: authBloc,
     authRepository: authRepository,
     apiClient: apiClient,
-    userBloc: userBloc,
     dio: dio,
   ));
 }
 
 class MainApp extends StatelessWidget {
-  final ProductListBloc productListBloc;
-  final ProductDetailBloc productDetailBloc;
-  final UserListBloc userListBloc;
-  final UserDetailBloc userDetailBloc;
-  final OrderBloc orderBloc;
-  final OrderPartBloc orderPartBloc;
-  final CartBloc cartBloc;
-  final AuthBloc authBloc;
   final AuthRepository authRepository;
   final ApiClient apiClient;
-  final UserBloc userBloc;
   final Dio dio;
 
   MainApp({
     super.key,
-    required this.productListBloc,
-    required this.productDetailBloc,
-    required this.userListBloc,
-    required this.userDetailBloc,
-    required this.orderBloc,
-    required this.orderPartBloc,
-    required this.cartBloc,
-    required this.authBloc,
     required this.authRepository,
     required this.apiClient,
-    required this.userBloc,
     required this.dio,
   });
 
@@ -116,6 +62,9 @@ class MainApp extends StatelessWidget {
       providers: [
         RepositoryProvider<AuthRepository>.value(
           value: authRepository,
+        ),
+        RepositoryProvider<ApiClient>.value(
+          value: apiClient,
         ),
         RepositoryProvider<ProductRepository>(
           create: (context) => ProductRepositoryImpl(apiClient),
@@ -136,32 +85,37 @@ class MainApp extends StatelessWidget {
       child: MultiBlocProvider(
         providers: [
           BlocProvider<ProductListBloc>(
-            create: (context) => productListBloc,
+            create: (context) => ProductListBloc(ProductService(context.read<ProductRepository>())),
           ),
           BlocProvider<ProductDetailBloc>(
-            create: (context) => productDetailBloc,
+            create: (context) => ProductDetailBloc(ProductService(context.read<ProductRepository>())),
           ),
           BlocProvider<UserListBloc>(
-            create: (context) => userListBloc,
+            create: (context) => UserListBloc(UserService(context.read<UserRepository>())),
           ),
           BlocProvider<UserDetailBloc>(
-            create: (context) => userDetailBloc,
+            create: (context) => UserDetailBloc(UserService(context.read<UserRepository>())),
           ),
           BlocProvider<OrderBloc>(
-            create: (context) => orderBloc,
+            create: (context) => OrderBloc(OrderService(context.read<OrderRepository>())),
           ),
           BlocProvider<OrderPartBloc>(
-            create: (context) => orderPartBloc,
-          ),
-          BlocProvider<CartBloc>(
-            create: (context) => cartBloc,
+            create: (context) => OrderPartBloc(OrderPartService(context.read<OrderPartRepository>())),
           ),
           BlocProvider<AuthBloc>(
-            create: (context) => authBloc,
+            create: (context) => AuthBloc(AuthService(context.read<AuthRepository>())),
+          ),
+          BlocProvider<CartBloc>(
+            create: (context) {
+              final authService = AuthService(context.read<AuthRepository>());
+              final cartService = CartService(context.read<CartRepository>());
+              final authBloc = context.read<AuthBloc>();
+              return CartBloc(cartService, authService, authBloc);
+            },
           ),
           BlocProvider<UserBloc>(
-            create: (context) => userBloc,
-          )
+            create: (context) => UserBloc(UserService(context.read<UserRepository>())),
+          ),
         ],
         child: MaterialApp.router(
           debugShowCheckedModeBanner: false,

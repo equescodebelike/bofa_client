@@ -1,33 +1,27 @@
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:logger/logger.dart';
+import 'package:bloc/bloc.dart';
 
-/// Custom BlocObserver that logs all BLoC events and state changes
 class AppBlocObserver extends BlocObserver {
-  final Logger _logger = Logger();
-
   @override
-  void onEvent(Bloc bloc, Object? event) {
-    super.onEvent(bloc, event);
-    _logger.i('${bloc.runtimeType} | Event: $event');
+  void onCreate(BlocBase bloc) {
+    super.onCreate(bloc);
+    print('${bloc.runtimeType} onCreate');
   }
 
   @override
   void onChange(BlocBase bloc, Change change) {
     super.onChange(bloc, change);
-    _logger.i('${bloc.runtimeType} | Change: $change');
-  }
-
-  @override
-  void onTransition(Bloc bloc, Transition transition) {
-    super.onTransition(bloc, transition);
-    _logger.d(
-      '${bloc.runtimeType} | Transition: ${transition.event} -> ${transition.currentState} -> ${transition.nextState}',
-    );
+    print('${bloc.runtimeType} onChange -- $change');
   }
 
   @override
   void onError(BlocBase bloc, Object error, StackTrace stackTrace) {
+    print('onError -- ${bloc.runtimeType}, $error');
     super.onError(bloc, error, stackTrace);
-    _logger.e('${bloc.runtimeType} | Error: $error\nStackTrace: $stackTrace');
+  }
+
+  @override
+  void onClose(BlocBase bloc) {
+    super.onClose(bloc);
+    print('onClose -- ${bloc.runtimeType}');
   }
 }
